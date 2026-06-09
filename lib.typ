@@ -41,3 +41,16 @@
 
 // Блок доказательства теоремы.
 #let dok(body) = block(above: 0.4em, below: 0.6em, body)
+
+// Краткое пояснение «суть» — только для сложных теорем.
+#let sut(body) = block(
+  width: 100%, inset: (left: 8pt, top: 4pt, bottom: 4pt),
+  stroke: (left: 2pt + rgb("#e0a800")),
+  text(size: 10pt, [*Суть.* #body]),
+)
+
+// Матшорткаты
+#let dd = math.upright("d")        // дифференциал: integral f dd x
+#let limsup = math.limits(math.overline("lim"))
+#let liminf = math.limits(math.underline("lim"))
+#let eps = sym.epsilon.alt
