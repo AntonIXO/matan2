@@ -1,0 +1,43 @@
+// lib.typ — общие стили и компоненты конспекта по матанализу
+// (билеты "переплетаются" друг с другом через метки <op-...>/<th-...> и ссылки @...)
+
+#let conf(doc) = {
+  set page(numbering: "1", margin: 2.2cm)
+  set text(lang: "ru", size: 11pt)
+  set par(justify: true, leading: 0.62em)
+  set heading(numbering: "1.1")
+  show heading.where(level: 1): set text(size: 17pt)
+  show heading.where(level: 2): set text(size: 13pt)
+  show link: set text(fill: rgb("#1a5fb4"))
+  show ref: set text(fill: rgb("#1a5fb4"))
+  set math.equation(numbering: none)
+  doc
+}
+
+// Маркер незаполненного содержимого — видно, что осталось извлечь из лекций.
+#let todo = text(fill: rgb("#b00020"), style: "italic", [⟨извлечь из лекции⟩])
+
+// Связи билета с другими билетами/определениями.
+// Принимает метки: #svyazi(<op-b1-01>, <th-b1-03>)
+#let svyazi(..items) = {
+  let xs = items.pos()
+  if xs.len() == 0 { return }
+  block(
+    above: 0.4em, below: 0.6em,
+    text(size: 9pt, fill: rgb("#555"),
+      [→ опирается на: #xs.map(x => ref(x)).join(", ")]),
+  )
+}
+
+// Определение / формулировка.
+#let opr(body) = {
+  block(
+    width: 100%, inset: 8pt, radius: 4pt,
+    fill: rgb("#f4f6fb"), stroke: 0.5pt + rgb("#cfd8ea"),
+    body,
+  )
+  v(0.3em)
+}
+
+// Блок доказательства теоремы.
+#let dok(body) = block(above: 0.4em, below: 0.6em, body)
