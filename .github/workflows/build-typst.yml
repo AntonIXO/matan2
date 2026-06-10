@@ -17,11 +17,11 @@ jobs:
 
       - name: Build Typst document
         run: |
-          mkdir -p releases
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/typst/typst:latest compile main.typ releases/main.pdf
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/typst/typst:latest compile main.typ main.pdf
 
-      - name: Commit to releases folder
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          commit_message: "chore: compile typst to pdf"
-          file_pattern: 'releases/*.pdf'
+          tag_name: release-${{ github.sha }}
+          name: Release ${{ github.sha }}
+          files: main.pdf
