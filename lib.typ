@@ -73,7 +73,7 @@
 )
 
 // Матшорткаты
-#let dd = math.upright("d")        // дифференциал: integral f dd x
+#let dd = math.thin + math.upright($d$)  // дифференциал: integral f dd x → ∫ f dx (тонкий пробел + слитное dx)
 #let limsup = math.limits(math.overline("lim"))
 #let liminf = math.limits(math.underline("lim"))
 #let eps = sym.epsilon.alt
