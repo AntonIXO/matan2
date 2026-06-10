@@ -4,7 +4,7 @@
 #let conf(doc) = {
   set page(numbering: "1", margin: 2.2cm)
   set text(lang: "ru", size: 11pt)
-  set par(justify: true, leading: 0.62em)
+  set par(justify: true, leading: 0.72em, spacing: 0.95em)
   set heading(numbering: "1.1")
   show heading.where(level: 1): set text(size: 17pt)
   show heading.where(level: 2): set text(size: 13pt)
@@ -32,15 +32,15 @@
 // Определение / формулировка.
 #let opr(body) = {
   block(
-    width: 100%, inset: 8pt, radius: 4pt,
+    width: 100%, inset: 10pt, radius: 4pt,
     fill: rgb("#f4f6fb"), stroke: 0.5pt + rgb("#cfd8ea"),
     body,
   )
-  v(0.3em)
+  v(0.4em)
 }
 
 // Блок доказательства теоремы.
-#let dok(body) = block(above: 0.4em, below: 0.6em, body)
+#let dok(body) = block(above: 0.4em, below: 0.7em, body)
 
 // Краткое пояснение «суть» — только для сложных теорем.
 #let sut(body) = block(
