@@ -49,25 +49,28 @@
   text(size: 10pt, [*Суть.* #body]),
 )
 
-// Литературные вставки (вступление/послесловие) — вне оглавления, отдельный стиль.
-#let lit(title, subtitle: none, body) = {
-  v(0.4em)
-  line(length: 100%, stroke: 0.5pt + rgb("#cfd8ea"))
-  v(0.7em)
-  align(center, text(16pt, weight: "bold")[#title])
-  if subtitle != none {
-    v(0.2em)
-    align(center, text(9.5pt, style: "italic", fill: rgb("#777"))[#subtitle])
-  }
-  v(1em)
-  block(width: 100%, {
-    set par(justify: true, leading: 0.85em, spacing: 1.05em, first-line-indent: 1.1em)
+// Литературные вставки (вступление/послесловие) — вне оглавления, в рамке.
+#let lit(title, subtitle: none, body) = block(
+  width: 100%,
+  inset: (x: 16pt, y: 14pt),
+  radius: 5pt,
+  stroke: 0.7pt + rgb("#c2cde4"),
+  fill: rgb("#fafbfe"),
+  breakable: true,
+  {
+    align(center, text(16pt, weight: "bold")[#title])
+    if subtitle != none {
+      v(0.25em)
+      align(center, text(9.5pt, style: "italic", fill: rgb("#777"))[#subtitle])
+    }
+    v(0.4em)
+    line(length: 100%, stroke: 0.4pt + rgb("#dbe2f0"))
+    v(0.7em)
+    set par(justify: true, leading: 0.8em, spacing: 1.15em, first-line-indent: 1.1em)
     set text(size: 11pt)
     body
-  })
-  v(0.6em)
-  line(length: 100%, stroke: 0.5pt + rgb("#cfd8ea"))
-}
+  },
+)
 
 // Матшорткаты
 #let dd = math.upright("d")        // дифференциал: integral f dd x
