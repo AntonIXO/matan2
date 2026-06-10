@@ -1,0 +1,27 @@
+name: Build and Release Typst Document
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Typst document
+        run: |
+          mkdir -p releases
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/typst/typst:latest compile main.typ releases/main.pdf
+
+      - name: Commit to releases folder
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: compile typst to pdf"
+          file_pattern: 'releases/*.pdf'

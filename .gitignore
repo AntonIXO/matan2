@@ -1,5 +1,6 @@
 # выходные/промежуточные
 *.pdf
+!releases/*.pdf
 __pycache__/
 *.vtt
 Desmos-MCP/
