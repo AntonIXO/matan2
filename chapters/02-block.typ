@@ -93,7 +93,7 @@
 
 === Гамма функция Эйлера. Простейшие свойства. Интеграл Эйлера--Пуассона <th-b2-04>
 #svyazi(<op-b2-03>, <th-b1-32>, <op-b1-13>)
-*Билет.* $Gamma(t)=integral_0^oo x^(t-1)e^(-x) dd x$ сходится при $t>0$; выпукла (значит непрерывна); $Gamma(t+1)=t Gamma(t)$, $Gamma(n+1)=n!$; $Gamma(1/2)=sqrt(pi)$, т.е. $integral_0^oo e^(-x^2) dd x=sqrt(pi)/2$.
+*Билет.* $Gamma(t)=integral_0^oo x^(t-1)e^(-x) dd x$ сходится при $t>0$; выпукла (значит непрерывна); $Gamma(t+1)=t Gamma(t)$, $Gamma(n+1)=n!$; $Gamma(1/2)=sqrt(pi)$, т.е. $integral_0^oo e^(-x^2) dd x=sqrt(pi)/2$. #viz("https://www.desmos.com/calculator/ukcvlk6fo4")
 
 *Доказательство.* #dok[
   *Сходимость:* у $0$ — $x^(t-1)$ интегрируема при $t>0$; у $+oo$ — $e^(-x)$ давит степень.
@@ -132,6 +132,7 @@
 === Интеграл Дирихле <th-b2-08>
 #svyazi(<th-b2-07>)
 *Билет.* $ integral_0^(+oo) (sin x)/x dd x = pi/2. $
+Затухающие осцилляции в огибающих $plus.minus 1\/x$. #viz("https://www.desmos.com/calculator/aynclo92v4")
 
 *Доказательство.* #dok[
   *Ядро Дирихле:* $1/2+sum_(k=1)^n cos k x=(sin((n+1/2)x))/(2 sin(x/2))$. Интегрируя по $[0,pi]$, получаем $integral_0^pi (sin((n+1/2)x))/(2 sin(x/2)) dd x=pi/2$.

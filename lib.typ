@@ -72,6 +72,9 @@
   },
 )
 
+// Ссылка на интерактивный график Desmos (геометрический смысл билета).
+#let viz(url) = text(size: 9pt, fill: rgb("#1a5fb4"))[#link(url)[(интерактив #sym.arrow.tr)]]
+
 // Матшорткаты
 #let dd = math.thin + math.upright($d$)  // дифференциал: integral f dd x → ∫ f dx (тонкий пробел + слитное dx)
 #let limsup = math.limits(math.overline("lim"))
