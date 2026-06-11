@@ -14,6 +14,80 @@
   <op-b3-04>, <op-b3-07>, <op-b3-09>, <op-b3-10>, <op-b3-11>,
 )
 
+// Обратные ссылки «← нужен для» — транспонированный граф зависимостей.
+// Считается автоматически из зарегистрированных <dep-edge> (см. svyazi ниже);
+// вызывается из show-правила заголовков. Показывает, в чьих доказательствах
+// используется данный билет.
+#let nuzhen-dlya(lbl) = context {
+  let srcs = ()
+  for e in query(<dep-edge>) {
+    let v = e.value
+    if v.src != none and v.dst.contains(lbl) and not srcs.contains(v.src) {
+      srcs.push(v.src)
+    }
+  }
+  if srcs.len() > 0 {
+    block(
+      above: 0.2em, below: 0.5em,
+      text(size: 9pt, fill: rgb("#777"),
+        [← нужен для: #srcs.map(s => ref(s)).join(", ")]),
+    )
+  }
+}
+
+// Теги методов/приёмов — горизонтальные связи (один и тот же инструмент в разных
+// билетах), которых нет в вертикальной структуре лекций. Ключ — имя метки билета.
+// Кластеры собраны вручную по содержанию доказательств.
+#let _metody = (
+  // двукратное интегрирование по частям / интегральное ядро
+  "th-b1-09": ("по частям", "иерархия роста"),
+  "th-b1-29": ("по частям",),
+  "th-b1-30": ("по частям",),
+  // иерархия роста  ln x ≪ xᵃ ≪ qˣ ≪ n!
+  "th-b1-13": ("иерархия роста", "Лагранж"),
+  "th-b2-03": ("иерархия роста",),
+  "th-b2-04": ("иерархия роста", "зажим"),
+  // оценка зажимом (sandwich)
+  "th-b1-16": ("зажим",),
+  "th-b1-18": ("зажим",),
+  "th-b1-32": ("зажим",),
+  "th-b1-39": ("зажим",),
+  // телескопическая сумма (адд. и мульт.)
+  "th-b1-14": ("телескоп",),
+  "th-b2-12": ("телескоп",),
+  "th-b2-13": ("телескоп",),
+  "th-b2-16": ("телескоп",),
+  // монотонность + ограниченность ⇒ предел
+  "op-b1-20": ("монотонность+огранич.⇒предел",),
+  "th-b1-22": ("монотонность+огранич.⇒предел",),
+  "th-b2-02": ("монотонность+огранич.⇒предел",),
+  "th-b2-10": ("монотонность+огранич.⇒предел",),
+  "th-b2-15": ("монотонность+огранич.⇒предел",),
+  // опорная прямая
+  "th-b1-24": ("опорная прямая",),
+  "th-b1-26": ("опорная прямая",),
+  "th-b1-27": ("опорная прямая",),
+  "th-b1-34": ("опорная прямая",),
+  "th-b1-36": ("опорная прямая",),
+  // теорема Лагранжа о среднем (в т.ч. покоординатно / лесенкой)
+  "op-b1-02": ("Лагранж",),
+  "th-b1-10": ("Лагранж",),
+  "th-b1-20": ("Лагранж",),
+  "th-b3-04": ("Лагранж",),
+  "th-b3-07": ("Лагранж",),
+)
+
+#let metod-for(lbl) = {
+  let key = str(lbl)
+  if key in _metody {
+    block(
+      above: 0.1em, below: 0.5em,
+      text(size: 9pt, fill: rgb("#7a4fb0"), style: "italic",
+        [⟂ метод: #_metody.at(key).join(" · ")]),
+    )
+  }
+}
+
 #let conf(doc) = {
   set page(numbering: "1", margin: 2.2cm)
   set text(lang: "ru", size: 11pt)
@@ -22,9 +96,11 @@
   show heading.where(level: 1): set text(size: 17pt)
   show heading.where(level: 2): set text(size: 13pt)
   // Билеты вне списка обязательных — приглушаем (заголовок).
+  // Под заголовком — авто-обратные ссылки «← нужен для».
   show heading.where(level: 3): it => {
     set text(fill: rgb("#8a8a8a"), weight: "regular") if not (it.has("label") and obyaz.contains(it.label))
     it
+    if it.has("label") { nuzhen-dlya(it.label); metod-for(it.label) }
   }
   // То же — в оглавлении.
   show outline.entry.where(level: 3): it => {
@@ -41,11 +117,18 @@
 // Маркер незаполненного содержимого — видно, что осталось извлечь из лекций.
 #let todo = text(fill: rgb("#b00020"), style: "italic", [⟨извлечь из лекции⟩])
 
-// Связи билета с другими билетами/определениями.
+// Связи билета с другими билетами/определениями (прямое ребро графа «опирается на»).
 // Принимает метки: #svyazi(<op-b1-01>, <th-b1-03>)
+// Побочно регистрирует ребро <dep-edge> для авто-генерации обратных ссылок
+// (источник = ближайший заголовок-билет перед вызовом).
 #let svyazi(..items) = {
   let xs = items.pos()
   if xs.len() == 0 { return }
+  context {
+    let hs = query(heading.where(level: 3).before(here()))
+    let src = if hs.len() > 0 and hs.last().has("label") { hs.last().label } else { none }
+    [#metadata((src: src, dst: xs)) <dep-edge>]
+  }
   block(
     above: 0.4em, below: 0.6em,
     text(size: 9pt, fill: rgb("#555"),
@@ -121,6 +204,27 @@
   let url = if time == none { base } else { base + "&t=" + str(_tc-sec(time)) + "s" }
   let label = if time == none { "Кохась. Лекция " + str(n) } else { "Кохась. Лекция " + str(n) + ", " + time }
   text(size: 9pt, fill: rgb("#777"), style: "italic")[#link(url)[(#label)]]
+}
+
+// Компактная ссылка на билет: только номер (1.2.14) гиперссылкой, без слова «Раздел».
+// Удобно в приложениях-таблицах. Принимает метку: #bil(<th-b1-14>).
+#let bil(lbl) = context {
+  let els = query(lbl)
+  if els.len() == 0 { return text(fill: red)[?] }
+  let loc = els.first().location()
+  text(fill: rgb("#1a5fb4"), link(loc)[#numbering("1.1", ..counter(heading).at(loc))])
+}
+
+// Свод методов: инвертирует таблицу тегов _metody (метод → список билетов).
+// Авто-генерируется, поэтому всегда синхронен с тегами под заголовками.
+#let metody-svodka() = {
+  let inv = (:)
+  for (lbl, ms) in _metody.pairs() {
+    for m in ms { inv.insert(m, inv.at(m, default: ()) + (lbl,)) }
+  }
+  for (m, lbls) in inv.pairs() {
+    block(below: 0.5em, [*#m* — #lbls.map(l => bil(label(l))).join(", ")])
+  }
 }
 
 // Матшорткаты

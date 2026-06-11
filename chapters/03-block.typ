@@ -9,6 +9,7 @@
   $ chevron.l x,y chevron.r = sum_(i=1)^m x_i y_i, quad norm(x)=sqrt(chevron.l x\,x chevron.r)=sqrt(sum x_i^2), quad rho(x,y)=norm(x-y). $
   Неравенство КБШ: $abs(chevron.l x\,y chevron.r)<=norm(x) norm(y)$. (Виноградов, гл. 2 §1.)
 ]
+#sut[ КБШ — это *неравенство Гёльдера* @th-b1-34 при $p=q=2$ (самосопряжённый показатель): $sum abs(x_i y_i)<=(sum x_i^2)^(1\/2)(sum y_i^2)^(1\/2)$. Мостик из Блока 1 в Блок 3, которого структура лекций не давала. См. таблицу двойников в приложении. ]
 
 === Окрестность точки в R^m, открытое множество <op-b3-02>
 #opr[
