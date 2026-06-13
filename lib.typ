@@ -89,9 +89,12 @@
 }
 
 #let conf(doc) = {
-  set page(numbering: "1", margin: 2.2cm)
+  set page(numbering: "1", margin: 2.4cm)
   set text(lang: "ru", size: 11pt)
-  set par(justify: true, leading: 0.72em, spacing: 0.95em)
+  // leading чуть просторнее дефолта — строки перегружены формулами и кванторами,
+  // им нужен воздух между базовыми линиями; margin 2.4cm подтягивает длину строки
+  // к читаемому диапазону (~80 знаков вместо ~90).
+  set par(justify: true, leading: 0.78em, spacing: 0.95em)
   set heading(numbering: "1.1")
   show heading.where(level: 1): set text(size: 17pt)
   show heading.where(level: 2): set text(size: 13pt)
@@ -111,6 +114,9 @@
   show link: set text(fill: rgb("#1a5fb4"))
   show ref: set text(fill: rgb("#1a5fb4"))
   set math.equation(numbering: none)
+  // Выносные формулы дышат чуть свободнее основного текста — чтобы плотные
+  // страницы с цепочками равенств не слипались в сплошную массу.
+  show math.equation.where(block: true): set block(spacing: 1.05em)
   doc
 }
 
@@ -146,8 +152,20 @@
   v(0.4em)
 }
 
-// Блок доказательства теоремы.
-#let dok(body) = block(above: 0.4em, below: 0.7em, body)
+// Блок доказательства теоремы — отдельный визуальный слой: тонкая левая линейка
+// и втяжка отделяют «рассуждение» от боксов-определений и жирных формулировок,
+// в конце — ∎ как сигнал завершения (быстро сканируется глазом при повторении).
+#let dok(body) = block(
+  width: 100%,
+  above: 0.5em, below: 0.7em,
+  inset: (left: 10pt, top: 1pt, bottom: 1pt),
+  stroke: (left: 1.5pt + rgb("#c4ccd8")),
+  {
+    body
+    v(-0.15em)
+    align(right, text(size: 9pt, fill: rgb("#9aa3b2"), $square$))
+  },
+)
 
 // Краткое пояснение «суть» — только для сложных теорем.
 #let sut(body) = block(
