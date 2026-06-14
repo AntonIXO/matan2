@@ -88,6 +88,14 @@
   }
 }
 
+// Бейдж необязательного билета — чтобы такие билеты не пролистывались мимо
+// (раньше они просто глушились в серый и терялись при повторении).
+#let _opt-badge = box(
+  baseline: 0.15em, inset: (x: 5pt, y: 1.5pt), radius: 3pt,
+  fill: rgb("#fff1d0"), stroke: 0.6pt + rgb("#e0a800"),
+  text(size: 8pt, fill: rgb("#9a6500"), weight: "medium", [★ необязательный]),
+)
+
 #let conf(doc) = {
   set page(numbering: "1", margin: 2.4cm)
   set text(lang: "ru", size: 11pt)
@@ -98,17 +106,33 @@
   set heading(numbering: "1.1")
   show heading.where(level: 1): set text(size: 17pt)
   show heading.where(level: 2): set text(size: 13pt)
-  // Билеты вне списка обязательных — приглушаем (заголовок).
+  // Билеты вне списка обязательных — НЕ приглушаем, а наоборот помечаем:
+  // амбровая линейка слева + тёплый цвет + бейдж «★ необязательный», чтобы их
+  // не пролистывали мимо. Обязательные остаются чёрными (основной массив).
   // Под заголовком — авто-обратные ссылки «← нужен для».
   show heading.where(level: 3): it => {
-    set text(fill: rgb("#8a8a8a"), weight: "regular") if not (it.has("label") and obyaz.contains(it.label))
-    it
+    if not (it.has("label") and obyaz.contains(it.label)) {
+      block(
+        width: 100%, inset: (left: 9pt, top: 1pt, bottom: 1pt),
+        stroke: (left: 3pt + rgb("#e0a800")),
+        {
+          set text(fill: rgb("#8a5a00"))
+          grid(
+            columns: (1fr, auto), align: (left, left + top), column-gutter: 8pt,
+            it, box(inset: (top: 3pt), _opt-badge),
+          )
+        },
+      )
+    } else {
+      it
+    }
     if it.has("label") { nuzhen-dlya(it.label); metod-for(it.label) }
   }
-  // То же — в оглавлении.
+  // В оглавлении — тёплый амбровый цвет вместо приглушённого серого:
+  // необязательные билеты видны, а не теряются.
   show outline.entry.where(level: 3): it => {
     let e = it.element
-    set text(fill: rgb("#8a8a8a"), weight: "regular") if not (e.has("label") and obyaz.contains(e.label))
+    set text(fill: rgb("#a36b00")) if not (e.has("label") and obyaz.contains(e.label))
     it
   }
   show link: set text(fill: rgb("#1a5fb4"))
