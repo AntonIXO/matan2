@@ -136,7 +136,17 @@
     it
   }
   show link: set text(fill: rgb("#1a5fb4"))
-  show ref: set text(fill: rgb("#1a5fb4"))
+  // Ссылки на билеты — ТОЛЬКО по названию: ссылка на заголовок рендерится как его
+  // название-ссылка (без «Раздел» и без номера), а не голое «Раздел N». Это же
+  // правило переводит авто-строки «→ опирается на» / «← нужен для» на названия теорем.
+  show ref: it => {
+    let el = it.element
+    if el != none and el.func() == heading {
+      link(el.location(), text(fill: rgb("#1a5fb4"), el.body))
+    } else {
+      text(fill: rgb("#1a5fb4"), it)
+    }
+  }
   set math.equation(numbering: none)
   // Выносные формулы дышат чуть свободнее основного текста — чтобы плотные
   // страницы с цепочками равенств не слипались в сплошную массу.
@@ -265,7 +275,7 @@
     for m in ms { inv.insert(m, inv.at(m, default: ()) + (lbl,)) }
   }
   for (m, lbls) in inv.pairs() {
-    block(below: 0.5em, [*#m* — #lbls.map(l => bil(label(l))).join(", ")])
+    block(below: 0.5em, [*#m* — #lbls.map(l => ref(label(l))).join(", ")])
   }
 }
 
