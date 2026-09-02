@@ -137,7 +137,7 @@
 #svyazi(<op-b3-09>, <th-b3-02>)
 *Билет.* *Лемма (оценка нормы):* $norm(A x)<=C_A norm(x)$, $C_A=sqrt(sum a_(i j)^2)$.
 
-*Теорема:* $F$ дифф. в $a$, $G$ дифф. в $b=F(a) => G compose F$ дифф. в $a$ и
+*Теорема:* $F: E subset RR^m -> RR^n$ дифф. в $a in "int" E$, $G: D subset RR^n -> RR^p$ дифф. в $b=F(a) in "int" D$ (внутренность несократима — иначе $G(F(a+h))$ не определено при сколь угодно малых $h$) $=> G compose F$ дифф. в $a$ и
 $ (G compose F)'(a)=G'(F(a)) dot F'(a). $
 
 *Доказательство.* #lek(14, time: "33:32"). #dok[
@@ -160,7 +160,7 @@ $ (lambda F)'(a)h=(lambda'(a)h)F(a)+lambda(a)(F'(a)h); quad chevron.l F,G chevro
 
 === Теорема Лагранжа для векторнозначных функций <th-b3-07>
 #svyazi(<op-b3-01>, <th-b3-06>)
-*Билет.* $F:[a,b]->RR^n$ непрерывна, дифференцируема $=> exists c in (a,b): norm(F(b)-F(a))<=norm(F'(c)) abs(b-a)$.
+*Билет.* $F:[a,b]->RR^n$, $F in C[a,b]$ и дифференцируема на $(a,b)$ $=> exists c in (a,b): norm(F(b)-F(a))<=norm(F'(c)) abs(b-a)$. (Непрерывность именно на *замкнутом* $[a,b]$, дифференцируемость — только внутри: концы входят в оценку значениями, а не производными.)
 
 *Доказательство.* #lek(14, time: "2:09:10"). #dok[
   $phi(t)=chevron.l F(b)-F(a),F(t)-F(a) chevron.r$. Тогда $phi(a)=0$, $phi(b)=norm(F(b)-F(a))^2$, $phi'(t)=chevron.l F(b)-F(a),F'(t) chevron.r$. По скалярной Лагранжа $phi(b)-phi(a)=phi'(c)(b-a)$, далее КБШ:
