@@ -42,6 +42,20 @@ A theorem билет is **Билет/формулировка → Доказат
 - `#viz(url)` — link to an interactive Desmos graph for geometric билеты.
 - `#todo` — placeholder for content not yet extracted.
 
+### How to write a proof (compression is the rule, not an option)
+
+The document is an exam crib, not a textbook. A proof is graded by how fast it can be re-derived on the board from what's written — not by completeness. Default to the shortest form that is still self-sufficient; the reader is Anton on exam day, not a beginner.
+
+**The lectures are the source of truth.** `clean/лекция_NN.txt` outranks everything else: `examples/human.txt`, `examples/theorems.txt`, textbooks, and — especially — a proof you can reconstruct yourself. Before writing or editing any proof, grep the transcripts for it (the auto-subtitles mangle names — search for phonetic variants: «Лапиталь / правилапиталя / капиталя», «теорема Каши», «теорема Трбу») and reproduce *Kohás's* argument, his hypotheses, his case split, his counter-examples. A slicker textbook proof is the wrong answer on this exam: the билет is graded against what was lectured. When the lecture and another source disagree, the lecture wins and the discrepancy is worth a one-clause note. Only when the transcript genuinely lacks a step may you fill it in — and then say so.
+
+- **No decompression.** Never expand a lecture point into an essay. One sentence, one formula, one line — then stop. If a paragraph explains what the formula next to it already says, cut the paragraph.
+- **Lead with the mechanism.** Every proof has one load-bearing step (an identity, a substitution, an invariant, a telescoping). Name it (`*Ключ — …*`) and give it as a display equation with the auxiliary terms marked `underbrace(…, ->0)`. Everything else is bookkeeping and gets one clause.
+- **Symbols over prose.** `$=>$`, `$forall$`, `$exists$`, `$in$`, `$or$` instead of "отсюда следует", "для любого", "или". Hypotheses go in one quantified display line, not a bulleted list of Russian sentences.
+- **Lemmas keep the lecture's generality** (that's what makes them reusable in later билеты — e.g. an arbitrary set $D$ with a limit point in $overline(RR)$ is exactly what covers $a=oo$ for free), but their *proofs* collapse to one line.
+- **Cut**: restatements of the "meaning" of a step, motivational commentary, historical anecdotes, blow-by-blow narration of the lecturer's self-corrections. Keep a lecturer's remark only if it changes what is true (a corrected hypothesis, a counter-example, a stated gap).
+- **Keep the gaps honest.** If Kohás skipped a case, say so in one clause with `#lek(n)` — don't invent a proof and don't pad the omission with apology.
+- Layering (`#opr` → `#dok` → `#sut`) stays; density applies *inside* each layer. `#sut` is one or two sentences, only when the trick generalizes.
+
 ## Typst conventions specific to this document
 
 These caused real misrenders; follow them exactly:
