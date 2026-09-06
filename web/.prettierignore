@@ -1,0 +1,7 @@
+src/generated/
+public/
+dist/
+node_modules/
+test-results/
+playwright-report/
+bun.lock

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+public/notes.pdf
+public/blender/
+src/generated/
+*.tsbuildinfo
