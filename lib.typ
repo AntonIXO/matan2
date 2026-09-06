@@ -96,6 +96,21 @@
   text(size: 8pt, fill: rgb("#9a6500"), weight: "medium", [★ необязательный]),
 )
 
+// Ссылки на веб-сцены: карта обновляется командой `bun run sync` в web/.
+// JSON входит в исходники, поэтому обычной сборке Typst не нужен Bun.
+#let _web-scenes = json("web-scenes.json").tickets
+#let scene-links(lbl) = {
+  let key = str(lbl)
+  if key in _web-scenes {
+    block(
+      above: 0.2em, below: 0.5em,
+      text(size: 9pt)[
+        Сцены: #_web-scenes.at(key).map(scene => link(scene.url, scene.title)).join(" · ")
+      ],
+    )
+  }
+}
+
 #let conf(doc) = {
   set page(numbering: "1", margin: 2.4cm)
   set text(lang: "ru", size: 11pt)
@@ -126,7 +141,11 @@
     } else {
       it
     }
-    if it.has("label") { nuzhen-dlya(it.label); metod-for(it.label) }
+    if it.has("label") {
+      scene-links(it.label)
+      nuzhen-dlya(it.label)
+      metod-for(it.label)
+    }
   }
   // В оглавлении — тёплый амбровый цвет вместо приглушённого серого:
   // необязательные билеты видны, а не теряются.

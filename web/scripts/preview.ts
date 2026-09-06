@@ -1,0 +1,10 @@
+import { chromium } from '@playwright/test';
+import { launchOptions } from './browser';
+const browser = await chromium.launch(launchOptions);
+const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+page.on('pageerror', (e) => console.log('ERROR', e.message));
+await page.goto('http://127.0.0.1:5173/s2/#staircase?step=2');
+await page.waitForTimeout(800);
+await page.screenshot({ path: '/tmp/matan-preview.png' });
+console.log(await page.locator('h1').textContent());
+await browser.close();

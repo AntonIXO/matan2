@@ -1,0 +1,719 @@
+{
+  "site": "https://math.devpins.org/s2/",
+  "tickets": {
+    "op-b1-01": [
+      {
+        "title": "Один δ для всего отрезка",
+        "url": "https://math.devpins.org/s2/#cantor?step=0",
+        "lesson": "cantor",
+        "step": 0
+      }
+    ],
+    "op-b1-05": [
+      {
+        "title": "Площадь, знак и плотность",
+        "url": "https://math.devpins.org/s2/#integral?step=0",
+        "lesson": "integral",
+        "step": 0
+      }
+    ],
+    "op-b1-06": [
+      {
+        "title": "Площадь, знак и плотность",
+        "url": "https://math.devpins.org/s2/#integral?step=0",
+        "lesson": "integral",
+        "step": 0
+      }
+    ],
+    "op-b1-07": [
+      {
+        "title": "Площадь, знак и плотность",
+        "url": "https://math.devpins.org/s2/#integral?step=1",
+        "lesson": "integral",
+        "step": 1
+      }
+    ],
+    "op-b1-08": [
+      {
+        "title": "Площадь, знак и плотность",
+        "url": "https://math.devpins.org/s2/#integral?step=5",
+        "lesson": "integral",
+        "step": 5
+      },
+      {
+        "title": "Зажать сектор двумя круговыми",
+        "url": "https://math.devpins.org/s2/#polar-area?step=0",
+        "lesson": "polar-area",
+        "step": 0
+      }
+    ],
+    "op-b1-09": [
+      {
+        "title": "Что видно около критической точки",
+        "url": "https://math.devpins.org/s2/#extrema?step=0",
+        "lesson": "extrema",
+        "step": 0
+      }
+    ],
+    "op-b1-10": [
+      {
+        "title": "Параметр выбирает точку",
+        "url": "https://math.devpins.org/s2/#path?step=0",
+        "lesson": "path",
+        "step": 0
+      }
+    ],
+    "op-b1-11": [
+      {
+        "title": "Параметр выбирает точку",
+        "url": "https://math.devpins.org/s2/#path?step=0",
+        "lesson": "path",
+        "step": 0
+      },
+      {
+        "title": "Что измеряет длина пути",
+        "url": "https://math.devpins.org/s2/#path-length?step=0",
+        "lesson": "path-length",
+        "step": 0
+      }
+    ],
+    "op-b1-12": [
+      {
+        "title": "Параметр выбирает точку",
+        "url": "https://math.devpins.org/s2/#path?step=0",
+        "lesson": "path",
+        "step": 0
+      },
+      {
+        "title": "Два слагаемых полярной длины",
+        "url": "https://math.devpins.org/s2/#polar-length?step=0",
+        "lesson": "polar-length",
+        "step": 0
+      }
+    ],
+    "op-b1-13": [
+      {
+        "title": "Хорда выше, опора ниже",
+        "url": "https://math.devpins.org/s2/#convexity?step=0",
+        "lesson": "convexity",
+        "step": 0
+      }
+    ],
+    "op-b1-14": [
+      {
+        "title": "Отрезок внутри множества",
+        "url": "https://math.devpins.org/s2/#convex-set?step=0",
+        "lesson": "convex-set",
+        "step": 0
+      },
+      {
+        "title": "Два луча и один диаметр",
+        "url": "https://math.devpins.org/s2/#diameter-area?step=0",
+        "lesson": "diameter-area",
+        "step": 0
+      }
+    ],
+    "op-b1-15": [
+      {
+        "title": "Отрезок внутри множества",
+        "url": "https://math.devpins.org/s2/#convex-set?step=2",
+        "lesson": "convex-set",
+        "step": 2
+      }
+    ],
+    "op-b1-16": [
+      {
+        "title": "Хорда выше, опора ниже",
+        "url": "https://math.devpins.org/s2/#convexity?step=3",
+        "lesson": "convexity",
+        "step": 3
+      },
+      {
+        "title": "Два луча и один диаметр",
+        "url": "https://math.devpins.org/s2/#diameter-area?step=0",
+        "lesson": "diameter-area",
+        "step": 0
+      }
+    ],
+    "op-b1-17": [
+      {
+        "title": "От прямоугольника к точной ошибке",
+        "url": "https://math.devpins.org/s2/#quadrature?step=0",
+        "lesson": "quadrature",
+        "step": 0
+      }
+    ],
+    "th-b1-01": [
+      {
+        "title": "Один δ для всего отрезка",
+        "url": "https://math.devpins.org/s2/#cantor?step=0",
+        "lesson": "cantor",
+        "step": 0
+      }
+    ],
+    "th-b1-02": [
+      {
+        "title": "Смещение и одноцветная тропинка",
+        "url": "https://math.devpins.org/s2/#brouwer?step=0",
+        "lesson": "brouwer",
+        "step": 0
+      }
+    ],
+    "th-b1-04": [
+      {
+        "title": "Площадь, знак и плотность",
+        "url": "https://math.devpins.org/s2/#integral?step=2",
+        "lesson": "integral",
+        "step": 2
+      }
+    ],
+    "th-b1-05": [
+      {
+        "title": "Площадь, знак и плотность",
+        "url": "https://math.devpins.org/s2/#integral?step=3",
+        "lesson": "integral",
+        "step": 3
+      }
+    ],
+    "th-b1-06": [
+      {
+        "title": "Площадь, знак и плотность",
+        "url": "https://math.devpins.org/s2/#integral?step=4",
+        "lesson": "integral",
+        "step": 4
+      }
+    ],
+    "th-b1-07": [
+      {
+        "title": "Замена переменной и по частям",
+        "url": "https://math.devpins.org/s2/#substitution?step=0",
+        "lesson": "substitution",
+        "step": 0
+      },
+      {
+        "title": "Обход и ориентированная площадь",
+        "url": "https://math.devpins.org/s2/#parametric-area?step=0",
+        "lesson": "parametric-area",
+        "step": 0
+      }
+    ],
+    "th-b1-10": [
+      {
+        "title": "Что видно около критической точки",
+        "url": "https://math.devpins.org/s2/#extrema?step=1",
+        "lesson": "extrema",
+        "step": 1
+      }
+    ],
+    "th-b1-11": [
+      {
+        "title": "Что видно около критической точки",
+        "url": "https://math.devpins.org/s2/#extrema?step=0",
+        "lesson": "extrema",
+        "step": 0
+      }
+    ],
+    "th-b1-13": [
+      {
+        "title": "Что видно около критической точки",
+        "url": "https://math.devpins.org/s2/#extrema?step=3",
+        "lesson": "extrema",
+        "step": 3
+      }
+    ],
+    "th-b1-15": [
+      {
+        "title": "Одна парабола на каждом интервале",
+        "url": "https://math.devpins.org/s2/#euler-maclaurin?step=3",
+        "lesson": "euler-maclaurin",
+        "step": 3
+      }
+    ],
+    "th-b1-16": [
+      {
+        "title": "Площадь, знак и плотность",
+        "url": "https://math.devpins.org/s2/#integral?step=5",
+        "lesson": "integral",
+        "step": 5
+      },
+      {
+        "title": "Зажать сектор двумя круговыми",
+        "url": "https://math.devpins.org/s2/#polar-area?step=0",
+        "lesson": "polar-area",
+        "step": 0
+      },
+      {
+        "title": "Из профиля — поверхность и объём",
+        "url": "https://math.devpins.org/s2/#revolution?step=0",
+        "lesson": "revolution",
+        "step": 0
+      }
+    ],
+    "th-b1-17": [
+      {
+        "title": "Зажать сектор двумя круговыми",
+        "url": "https://math.devpins.org/s2/#polar-area?step=0",
+        "lesson": "polar-area",
+        "step": 0
+      },
+      {
+        "title": "Обход и ориентированная площадь",
+        "url": "https://math.devpins.org/s2/#parametric-area?step=0",
+        "lesson": "parametric-area",
+        "step": 0
+      },
+      {
+        "title": "Два луча и один диаметр",
+        "url": "https://math.devpins.org/s2/#diameter-area?step=0",
+        "lesson": "diameter-area",
+        "step": 0
+      }
+    ],
+    "th-b1-18": [
+      {
+        "title": "Площадь, знак и плотность",
+        "url": "https://math.devpins.org/s2/#integral?step=5",
+        "lesson": "integral",
+        "step": 5
+      },
+      {
+        "title": "Что измеряет длина пути",
+        "url": "https://math.devpins.org/s2/#path-length?step=0",
+        "lesson": "path-length",
+        "step": 0
+      }
+    ],
+    "th-b1-19": [
+      {
+        "title": "Из профиля — поверхность и объём",
+        "url": "https://math.devpins.org/s2/#revolution?step=0",
+        "lesson": "revolution",
+        "step": 0
+      },
+      {
+        "title": "Объём цилиндрическими слоями",
+        "url": "https://math.devpins.org/s2/#shells?step=0",
+        "lesson": "shells",
+        "step": 0
+      },
+      {
+        "title": "Как получается тор",
+        "url": "https://math.devpins.org/s2/#torus?step=0",
+        "lesson": "torus",
+        "step": 0
+      }
+    ],
+    "th-b1-20": [
+      {
+        "title": "Что измеряет длина пути",
+        "url": "https://math.devpins.org/s2/#path-length?step=4",
+        "lesson": "path-length",
+        "step": 4
+      },
+      {
+        "title": "Два слагаемых полярной длины",
+        "url": "https://math.devpins.org/s2/#polar-length?step=0",
+        "lesson": "polar-length",
+        "step": 0
+      }
+    ],
+    "th-b1-21": [
+      {
+        "title": "Хорда выше, опора ниже",
+        "url": "https://math.devpins.org/s2/#convexity?step=1",
+        "lesson": "convexity",
+        "step": 1
+      }
+    ],
+    "th-b1-22": [
+      {
+        "title": "Хорда выше, опора ниже",
+        "url": "https://math.devpins.org/s2/#convexity?step=2",
+        "lesson": "convexity",
+        "step": 2
+      },
+      {
+        "title": "Излому — свой промежуток наклонов",
+        "url": "https://math.devpins.org/s2/#jumps?step=0",
+        "lesson": "jumps",
+        "step": 0
+      }
+    ],
+    "th-b1-23": [
+      {
+        "title": "Излому — свой промежуток наклонов",
+        "url": "https://math.devpins.org/s2/#jumps?step=0",
+        "lesson": "jumps",
+        "step": 0
+      }
+    ],
+    "th-b1-24": [
+      {
+        "title": "Хорда выше, опора ниже",
+        "url": "https://math.devpins.org/s2/#convexity?step=3",
+        "lesson": "convexity",
+        "step": 3
+      }
+    ],
+    "th-b1-25": [
+      {
+        "title": "Хорда выше, опора ниже",
+        "url": "https://math.devpins.org/s2/#convexity?step=4",
+        "lesson": "convexity",
+        "step": 4
+      }
+    ],
+    "th-b1-26": [
+      {
+        "title": "Два луча и один диаметр",
+        "url": "https://math.devpins.org/s2/#diameter-area?step=0",
+        "lesson": "diameter-area",
+        "step": 0
+      }
+    ],
+    "th-b1-27": [
+      {
+        "title": "Центр масс и опорная прямая",
+        "url": "https://math.devpins.org/s2/#jensen?step=0",
+        "lesson": "jensen",
+        "step": 0
+      }
+    ],
+    "th-b1-28": [
+      {
+        "title": "От прямоугольника к точной ошибке",
+        "url": "https://math.devpins.org/s2/#quadrature?step=1",
+        "lesson": "quadrature",
+        "step": 1
+      }
+    ],
+    "th-b1-29": [
+      {
+        "title": "От прямоугольника к точной ошибке",
+        "url": "https://math.devpins.org/s2/#quadrature?step=2",
+        "lesson": "quadrature",
+        "step": 2
+      }
+    ],
+    "th-b1-30": [
+      {
+        "title": "Одна парабола на каждом интервале",
+        "url": "https://math.devpins.org/s2/#euler-maclaurin?step=0",
+        "lesson": "euler-maclaurin",
+        "step": 0
+      }
+    ],
+    "th-b1-32": [
+      {
+        "title": "Три площади зажимают число",
+        "url": "https://math.devpins.org/s2/#wallis?step=0",
+        "lesson": "wallis",
+        "step": 0
+      },
+      {
+        "title": "Гауссов интеграл между двумя эталонами",
+        "url": "https://math.devpins.org/s2/#poisson?step=0",
+        "lesson": "poisson",
+        "step": 0
+      }
+    ],
+    "th-b1-34": [
+      {
+        "title": "Разные шары, одна треугольная оценка",
+        "url": "https://math.devpins.org/s2/#norms?step=2",
+        "lesson": "norms",
+        "step": 2
+      }
+    ],
+    "th-b1-35": [
+      {
+        "title": "Разные шары, одна треугольная оценка",
+        "url": "https://math.devpins.org/s2/#norms?step=3",
+        "lesson": "norms",
+        "step": 3
+      }
+    ],
+    "th-b1-36": [
+      {
+        "title": "Разные шары, одна треугольная оценка",
+        "url": "https://math.devpins.org/s2/#norms?step=1",
+        "lesson": "norms",
+        "step": 1
+      }
+    ],
+    "op-b2-01": [
+      {
+        "title": "Видимое плато ещё не предел",
+        "url": "https://math.devpins.org/s2/#improper?step=0",
+        "lesson": "improper",
+        "step": 0
+      }
+    ],
+    "op-b2-03": [
+      {
+        "title": "Параметр выбирает целый график",
+        "url": "https://math.devpins.org/s2/#gamma?step=0",
+        "lesson": "gamma",
+        "step": 0
+      }
+    ],
+    "th-b2-02": [
+      {
+        "title": "Видимое плато ещё не предел",
+        "url": "https://math.devpins.org/s2/#improper?step=0",
+        "lesson": "improper",
+        "step": 0
+      }
+    ],
+    "th-b2-04": [
+      {
+        "title": "Параметр выбирает целый график",
+        "url": "https://math.devpins.org/s2/#gamma?step=0",
+        "lesson": "gamma",
+        "step": 0
+      },
+      {
+        "title": "Гауссов интеграл между двумя эталонами",
+        "url": "https://math.devpins.org/s2/#poisson?step=0",
+        "lesson": "poisson",
+        "step": 0
+      }
+    ],
+    "th-b2-14": [
+      {
+        "title": "Видимое плато ещё не предел",
+        "url": "https://math.devpins.org/s2/#improper?step=0",
+        "lesson": "improper",
+        "step": 0
+      }
+    ],
+    "op-b3-01": [
+      {
+        "title": "Разные шары, одна треугольная оценка",
+        "url": "https://math.devpins.org/s2/#norms?step=0",
+        "lesson": "norms",
+        "step": 0
+      },
+      {
+        "title": "Шар, граница и приближение",
+        "url": "https://math.devpins.org/s2/#topology?step=0",
+        "lesson": "topology",
+        "step": 0
+      },
+      {
+        "title": "Спроецировать на хорду",
+        "url": "https://math.devpins.org/s2/#lagrange?step=0",
+        "lesson": "lagrange",
+        "step": 0
+      }
+    ],
+    "op-b3-02": [
+      {
+        "title": "Шар, граница и приближение",
+        "url": "https://math.devpins.org/s2/#topology?step=1",
+        "lesson": "topology",
+        "step": 1
+      }
+    ],
+    "op-b3-03": [
+      {
+        "title": "Шар, граница и приближение",
+        "url": "https://math.devpins.org/s2/#topology?step=3",
+        "lesson": "topology",
+        "step": 3
+      }
+    ],
+    "op-b3-04": [
+      {
+        "title": "Шар, граница и приближение",
+        "url": "https://math.devpins.org/s2/#topology?step=4",
+        "lesson": "topology",
+        "step": 4
+      }
+    ],
+    "op-b3-05": [
+      {
+        "title": "Что означает компактность",
+        "url": "https://math.devpins.org/s2/#compactness?step=0",
+        "lesson": "compactness",
+        "step": 0
+      }
+    ],
+    "op-b3-06": [
+      {
+        "title": "Матрица действует на приращение",
+        "url": "https://math.devpins.org/s2/#jacobian?step=0",
+        "lesson": "jacobian",
+        "step": 0
+      }
+    ],
+    "op-b3-07": [
+      {
+        "title": "Матрица действует на приращение",
+        "url": "https://math.devpins.org/s2/#jacobian?step=0",
+        "lesson": "jacobian",
+        "step": 0
+      },
+      {
+        "title": "Одна плоскость для всех направлений",
+        "url": "https://math.devpins.org/s2/#differentiability?step=3",
+        "lesson": "differentiability",
+        "step": 3
+      }
+    ],
+    "op-b3-08": [
+      {
+        "title": "Матрица действует на приращение",
+        "url": "https://math.devpins.org/s2/#jacobian?step=0",
+        "lesson": "jacobian",
+        "step": 0
+      },
+      {
+        "title": "Одна плоскость для всех направлений",
+        "url": "https://math.devpins.org/s2/#differentiability?step=3",
+        "lesson": "differentiability",
+        "step": 3
+      }
+    ],
+    "op-b3-09": [
+      {
+        "title": "Матрица действует на приращение",
+        "url": "https://math.devpins.org/s2/#jacobian?step=0",
+        "lesson": "jacobian",
+        "step": 0
+      },
+      {
+        "title": "Одна плоскость для всех направлений",
+        "url": "https://math.devpins.org/s2/#differentiability?step=0",
+        "lesson": "differentiability",
+        "step": 0
+      }
+    ],
+    "op-b3-10": [
+      {
+        "title": "Матрица действует на приращение",
+        "url": "https://math.devpins.org/s2/#jacobian?step=1",
+        "lesson": "jacobian",
+        "step": 1
+      },
+      {
+        "title": "Одна плоскость для всех направлений",
+        "url": "https://math.devpins.org/s2/#differentiability?step=0",
+        "lesson": "differentiability",
+        "step": 0
+      },
+      {
+        "title": "Сначала F, затем G",
+        "url": "https://math.devpins.org/s2/#composition?step=0",
+        "lesson": "composition",
+        "step": 0
+      }
+    ],
+    "op-b3-11": [
+      {
+        "title": "Матрица действует на приращение",
+        "url": "https://math.devpins.org/s2/#jacobian?step=1",
+        "lesson": "jacobian",
+        "step": 1
+      },
+      {
+        "title": "Одна плоскость для всех направлений",
+        "url": "https://math.devpins.org/s2/#differentiability?step=0",
+        "lesson": "differentiability",
+        "step": 0
+      },
+      {
+        "title": "Приращение по двум ступенькам",
+        "url": "https://math.devpins.org/s2/#staircase?step=0",
+        "lesson": "staircase",
+        "step": 0
+      }
+    ],
+    "op-b3-12": [
+      {
+        "title": "Направление наибольшего роста",
+        "url": "https://math.devpins.org/s2/#gradient?step=0",
+        "lesson": "gradient",
+        "step": 0
+      }
+    ],
+    "op-b3-13": [
+      {
+        "title": "Направление наибольшего роста",
+        "url": "https://math.devpins.org/s2/#gradient?step=0",
+        "lesson": "gradient",
+        "step": 0
+      }
+    ],
+    "th-b3-01": [
+      {
+        "title": "Матрица действует на приращение",
+        "url": "https://math.devpins.org/s2/#jacobian?step=3",
+        "lesson": "jacobian",
+        "step": 3
+      }
+    ],
+    "th-b3-02": [
+      {
+        "title": "Матрица действует на приращение",
+        "url": "https://math.devpins.org/s2/#jacobian?step=4",
+        "lesson": "jacobian",
+        "step": 4
+      },
+      {
+        "title": "Сначала F, затем G",
+        "url": "https://math.devpins.org/s2/#composition?step=0",
+        "lesson": "composition",
+        "step": 0
+      }
+    ],
+    "th-b3-03": [
+      {
+        "title": "Матрица действует на приращение",
+        "url": "https://math.devpins.org/s2/#jacobian?step=1",
+        "lesson": "jacobian",
+        "step": 1
+      }
+    ],
+    "th-b3-04": [
+      {
+        "title": "Приращение по двум ступенькам",
+        "url": "https://math.devpins.org/s2/#staircase?step=0",
+        "lesson": "staircase",
+        "step": 0
+      }
+    ],
+    "th-b3-05": [
+      {
+        "title": "Сначала F, затем G",
+        "url": "https://math.devpins.org/s2/#composition?step=0",
+        "lesson": "composition",
+        "step": 0
+      }
+    ],
+    "th-b3-06": [
+      {
+        "title": "Какие члены остаются линейными",
+        "url": "https://math.devpins.org/s2/#products?step=0",
+        "lesson": "products",
+        "step": 0
+      }
+    ],
+    "th-b3-07": [
+      {
+        "title": "Спроецировать на хорду",
+        "url": "https://math.devpins.org/s2/#lagrange?step=0",
+        "lesson": "lagrange",
+        "step": 0
+      }
+    ],
+    "th-b3-08": [
+      {
+        "title": "Направление наибольшего роста",
+        "url": "https://math.devpins.org/s2/#gradient?step=0",
+        "lesson": "gradient",
+        "step": 0
+      }
+    ]
+  }
+}

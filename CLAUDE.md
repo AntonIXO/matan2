@@ -42,6 +42,7 @@ A theorem билет is **Билет/формулировка → Доказат
 - `#sut[…]` — short "essence" (amber left-rule), only for hard theorems.
 - `#lek(n)` / `#lek(n, time: "12:57")` — citation to Kohás lecture *n* (links to YouTube, with `?t=` when a timecode is given). Use this to mark facts recovered from a lecture.
 - `#viz(url)` — link to an interactive Desmos graph for geometric билеты.
+- `scene-links(lbl)` — automatically adds web-scene links below билет headings from `web-scenes.json`. Regenerate the map with `bun run sync` in `web/`; it is included in the Typst sources so ordinary PDF builds do not require Bun. The web base URL is `https://math.devpins.org/s2/`.
 - `#todo` — placeholder for content not yet extracted.
 
 ### How to write a proof (compression is the rule, not an option)
