@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+Read [AGENTS.md](AGENTS.md) for Anton's learning philosophy and communication preferences. Its distinction between a compressed exam note and a step-by-step explanation of a specific difficulty applies to tutoring in this project.
+
 ## What this is
 
 A Russian-language **Typst** study-notes document (not a software project) — an exam crib for К. П. Кохась's Mathematical Analysis course (ITMO, S2 2026). The goal is to extract theorem proofs from lecture transcripts and weave the ~70 exam questions ("билеты") into one cross-linked chain. Only the билеты listed in `bilety-opr.csv` are in scope.

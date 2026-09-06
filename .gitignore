@@ -6,3 +6,5 @@ __pycache__/
 Desmos-MCP/
 # генерируемые текстовые дампы глав
 txt/
+# локальные рабочие копии Git
+.claude/worktrees/
