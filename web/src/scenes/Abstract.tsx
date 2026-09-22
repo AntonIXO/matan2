@@ -8,7 +8,7 @@ const m = (label: string, value: number | string, color?: string) => ({ label, v
 function Topology({ params: p, step, onParam, cameraKey }: SceneProps) {
   const q: V2 = [p.x, p.y],
     len = norm(q),
-    n = Math.max(2, Math.round(p.n)),
+    n = Math.max(step === 4 ? 2 : 1, Math.round(p.n)),
     seq: V2 = [1 / n, (-1) ** n / n],
     boundary: V2 = [1 - 1 / n, 0],
     current = step === 3 ? seq : step === 4 ? boundary : q;
@@ -43,8 +43,8 @@ function Topology({ params: p, step, onParam, cameraKey }: SceneProps) {
           />
         )}
         {step === 3 &&
-          Array.from({ length: n - 1 }, (_, i) => {
-            const k = i + 2;
+          Array.from({ length: n }, (_, i) => {
+            const k = i + 1;
             return <Dot key={k} p={[1 / k, (-1) ** k / k]} color={k === n ? C.gold : C.muted} />;
           })}
         {step === 4 && (
@@ -168,7 +168,7 @@ function Compactness({ params: p, step, cameraKey }: SceneProps) {
           </>
         )}
         <Label p={[0, -0.85]}>
-          {step === 3 ? 'K = (−1,1): предел отсутствует' : 'K = [−1,1] × {0}'}
+          {step === 3 ? 'K = (−1,1): предел 1 не принадлежит K' : 'K = [−1,1] × {0}'}
         </Label>
       </Board>
       <Metrics

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { lessons } from '../../src/lessons';
 
 test('Перетаскивание мышью и стрелки меняют параметр, сохраняя шаг', async ({ page }) => {
   await page.goto('./#path');
@@ -98,7 +99,7 @@ test('WebMCP: контракт действий через тестовый ре
   const catalog = await page.evaluate(() =>
     (window as any).__sceneTools.read_matan_catalog.execute({}),
   );
-  expect(catalog).toHaveLength(34);
+  expect(catalog).toHaveLength(lessons.length);
   await page.evaluate(() =>
     (window as any).__sceneTools.open_matan_scene.execute({ lessonId: 'polar-area', step: 2 }),
   );
@@ -131,17 +132,32 @@ test('Совместная подсветка связывает AB с хорд�
   const chip = page.getByRole('button', { name: 'AB · хорда', exact: true });
   await chip.focus();
   await expect(chip).toHaveAttribute('aria-pressed', 'true');
-  expect(
-    await page
-      .locator('[data-testid="scene"] polyline')
-      .evaluateAll((lines) =>
-        lines.some(
-          (line) =>
-            Number(line.getAttribute('stroke-width')) === 4 ||
-            getComputedStyle(line).strokeWidth === '4px',
+  await expect
+    .poll(() =>
+      page
+        .locator('[data-testid="scene"] polyline')
+        .evaluateAll((lines) =>
+          lines.some(
+            (line) =>
+              Number(line.getAttribute('stroke-width')) === 4 ||
+              getComputedStyle(line).strokeWidth === '4px',
+          ),
         ),
-      ),
-  ).toBe(true);
+    )
+    .toBe(true);
+});
+test('Нажатие закрепляет подсветку после ухода указателя и фокуса', async ({ page }) => {
+  await page.goto('./#diameter-area?step=3');
+  const chip = page.getByRole('button', { name: 'AB · хорда', exact: true });
+  await chip.hover();
+  await chip.click();
+  await page.mouse.move(0, 0);
+  await page.locator('main').focus();
+  await expect(chip).toHaveAttribute('aria-pressed', 'true');
+  await chip.click();
+  await page.mouse.move(0, 0);
+  await page.locator('main').focus();
+  await expect(chip).toHaveAttribute('aria-pressed', 'false');
 });
 test('Шкала t у окружности переключается на полный оборот', async ({ page }) => {
   await page.goto('./#lagrange?step=4');
@@ -165,10 +181,39 @@ test('Все шаги: автоматический переход и пауза
     ),
   ).toBe(-1);
   await page.goto('./#path?step=5&progress=0.99');
+  await expect(page.getByRole('slider', { name: 'Ход текущего шага', exact: true })).toHaveValue(
+    '0.99',
+  );
   await page.getByLabel('Все шаги', { exact: true }).check();
   await page.getByRole('button', { name: 'Воспроизвести шаг', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Воспроизвести шаг', exact: true })).toBeVisible();
   expect(
     Number(await page.getByRole('slider', { name: 'Ход текущего шага', exact: true }).inputValue()),
   ).toBe(1);
+});
+
+test('Статический шаг не предлагает бессодержательное воспроизведение', async ({ page }) => {
+  await page.goto('./#quadrature?step=2');
+  await expect(page.locator('.explanation h2')).toHaveText('Одна трапеция и ошибка');
+  await expect(page.getByRole('button', { name: 'Воспроизвести шаг', exact: true })).toBeDisabled();
+  await expect(page.getByRole('slider', { name: 'Ход текущего шага', exact: true })).toBeDisabled();
+  await page.getByLabel('Все шаги', { exact: true }).check();
+  await expect(page.getByRole('button', { name: 'Воспроизвести шаг', exact: true })).toBeEnabled();
+});
+
+test('Назад в браузере возвращает выбранную ранее сцену', async ({ page }) => {
+  const path = lessons.find((lesson) => lesson.id === 'path')!;
+  const target = lessons.find((lesson) => lesson.id === 'diameter-area')!;
+  await page.goto('./#path?step=2');
+  await expect(page.locator('h1')).toHaveText(path.title);
+  await expect(page.locator('.steps button').nth(2)).toHaveAttribute('aria-current', 'step');
+  const previous = page.url();
+  await page.locator('.lesson-link').filter({ hasText: target.title }).click();
+  await expect(page.locator('h1')).toHaveText(target.title);
+  await page.goBack();
+  await expect(page.locator('h1')).toHaveText(path.title);
+  await expect(page.locator('.steps button').nth(2)).toHaveAttribute('aria-current', 'step');
+  await expect(page).toHaveURL(previous);
+  await page.goForward();
+  await expect(page.locator('h1')).toHaveText(target.title);
 });

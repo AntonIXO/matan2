@@ -24,7 +24,7 @@ async function valid(page: Page) {
     );
   expect(bad).toBe(false);
 }
-test('Все 34 сцены: каждый смысловой шаг и оба края времени', async ({ page }) => {
+test('Все сцены: каждый смысловой шаг и оба края времени', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   for (const l of lessons) {
@@ -34,10 +34,11 @@ test('Все 34 сцены: каждый смысловой шаг и оба к�
     for (let i = 0; i < l.steps.length; i++) {
       await page.locator('.steps button').nth(i).click();
       await expect(page.locator('.explanation h2')).toHaveText(l.steps[i].title);
-      await page.getByRole('slider', { name: 'Ход текущего шага', exact: true }).press('Home');
+      const timeline = page.getByRole('slider', { name: 'Ход текущего шага', exact: true });
+      if (await timeline.isEnabled()) await timeline.press('Home');
       await ready(page);
       await valid(page);
-      await page.getByRole('slider', { name: 'Ход текущего шага', exact: true }).press('End');
+      if (await timeline.isEnabled()) await timeline.press('End');
       await ready(page);
       await valid(page);
     }

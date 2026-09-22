@@ -58,13 +58,18 @@ export function gammaTruncated(t: number, epsilon: number, R: number) {
     768,
   );
 }
-export const lp = (v: number[], p: number) =>
-  p === Infinity
-    ? Math.max(...v.map(Math.abs))
-    : Math.pow(
-        v.reduce((s, x) => s + Math.abs(x) ** p, 0),
-        1 / p,
-      );
+export function lp(v: number[], p: number) {
+  const scale = Math.max(0, ...v.map(Math.abs));
+  if (scale === 0 || p === Infinity) return scale;
+  // Conjugate q tends to infinity as p tends to 1: normalize before taking powers.
+  return (
+    scale *
+    Math.pow(
+      v.reduce((sum, x) => sum + (Math.abs(x) / scale) ** p, 0),
+      1 / p,
+    )
+  );
+}
 export const unitP = (angle: number, p: number): V2 => {
   const q: V2 = [Math.cos(angle), Math.sin(angle)];
   const n = lp(q, p);

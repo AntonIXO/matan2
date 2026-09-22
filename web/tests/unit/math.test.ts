@@ -279,12 +279,15 @@ describe('Квадратуры, специальные функции, топо�
   });
 });
 describe('Каталог, состояния и PDF', () => {
-  test('все сцены имеют 3–6 шагов, валидные ссылки и формулы', () => {
-    expect(lessons.length).toBe(34);
+  test('все сцены имеют 3–7 шагов, валидные ссылки и формулы', () => {
+    expect(lessons.length).toBeGreaterThanOrEqual(34);
     expect(new Set(lessons.map((l) => l.id)).size).toBe(lessons.length);
+    expect(new Set(lessons.flatMap((l) => l.tickets))).toEqual(
+      new Set(Object.keys(metadata.tickets)),
+    );
     for (const l of lessons) {
       expect(l.steps.length).toBeGreaterThanOrEqual(3);
-      expect(l.steps.length).toBeLessThanOrEqual(6);
+      expect(l.steps.length).toBeLessThanOrEqual(7);
       for (const id of l.tickets) expect(id in metadata.tickets).toBe(true);
       l.steps.forEach((st, i) => {
         expect(() =>

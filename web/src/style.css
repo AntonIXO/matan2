@@ -958,14 +958,14 @@ input[type='checkbox'] {
   }
 }
 .board {
-  padding: 30px 12px 48px;
+  padding: 30px 12px var(--metrics-space, 70px);
 }
 .dual-boards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
   height: 100%;
-  padding: 26px 12px 56px;
+  padding: 26px 12px var(--metrics-space, 70px);
 }
 .dual-boards > div {
   display: flex;
@@ -992,12 +992,22 @@ input[type='checkbox'] {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
-  .scene-substitution {
+  .scene-substitution,
+  .scene-primitives,
+  .scene-chebyshev,
+  .scene-piecewise-primitive {
     height: 650px !important;
   }
   .board {
-    padding: 32px 6px 50px;
+    padding: 32px 6px var(--metrics-space, 70px);
   }
+}
+
+.composition-panes {
+  padding-bottom: var(--metrics-space, 70px);
+}
+.composition-panes .board {
+  padding-bottom: 8px;
 }
 
 .space-inset {
@@ -1042,6 +1052,18 @@ input[type='checkbox'] {
 }
 .board-hint {
   height: auto;
+}
+.canvas-area:has(> .board-hint) > .board,
+.canvas-area:has(> .board-hint) > .dual-boards,
+.canvas-area:has(> .board-hint) > .composition-panes {
+  padding-top: 48px;
+}
+@media (max-width: 760px) {
+  .canvas-area:has(> .board-hint) > .board,
+  .canvas-area:has(> .board-hint) > .dual-boards,
+  .canvas-area:has(> .board-hint) > .composition-panes {
+    padding-top: 64px;
+  }
 }
 .formula-marks {
   display: flex;

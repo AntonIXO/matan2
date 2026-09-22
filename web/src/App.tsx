@@ -20,8 +20,10 @@ import {
   interpolate,
 } from './state';
 const readState = () => decodeState(location.hash, lessons);
+const normalize = (value: string) => value.toLowerCase().replaceAll('ё', 'е').trim();
 export default function App() {
   const [highlight, setHighlight] = useState('');
+  const [pinnedHighlight, setPinnedHighlight] = useState('');
   const [state, setState] = useState(readState),
     [playing, setPlaying] = useState(false),
     [all, setAll] = useState(false),
@@ -35,6 +37,8 @@ export default function App() {
   );
   const lesson = lessons.find((l) => l.id === state.id)!,
     step = lesson.steps[state.step];
+  const hasMotion = !!step.motion && step.motion.from !== step.motion.to;
+  const activeHighlight = highlight || pinnedHighlight;
   const stateRef = useRef(state);
   stateRef.current = state;
   const ticketMap = notes.tickets as Record<
@@ -44,15 +48,21 @@ export default function App() {
   const mainTicket = ticketMap[lesson.tickets[0]];
   const Scene = lesson.dimension === '3D' ? Space : Plane;
   useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [lesson.id]);
+  useEffect(() => {
     const media = matchMedia('(prefers-reduced-motion: reduce)');
     const on = () => setReduced(media.matches);
     media.addEventListener('change', on);
     return () => media.removeEventListener('change', on);
   }, []);
   useEffect(() => {
-    const fn = () => {
+    const fn = (event: HashChangeEvent) => {
       setPlaying(false);
-      setState(readState());
+      setHighlight('');
+      setPinnedHighlight('');
+      // A playback frame may replace location.hash before this event is delivered.
+      update(decodeState(new URL(event.newURL).hash, lessons));
     };
     window.addEventListener('hashchange', fn);
     return () => window.removeEventListener('hashchange', fn);
@@ -68,13 +78,25 @@ export default function App() {
   }
   function navigate(l: Lesson) {
     setHighlight('');
+    setPinnedHighlight('');
     setPlaying(false);
-    update(atStep(l));
+    const search = normalize(query);
+    const matchedTicket =
+      search &&
+      l.tickets.find(
+        (id) =>
+          ticketMap[id]?.number === search ||
+          normalize(ticketMap[id]?.title || '').includes(search),
+      );
+    const next = atStep(l, matchedTicket ? (l.entrySteps?.[matchedTicket] ?? 0) : 0);
+    if (l.id !== stateRef.current.id) history.pushState(null, '', encodeState(next));
+    update(next);
     setCamera((c) => c + 1);
     setMenu(false);
   }
   function chooseStep(index: number) {
     setHighlight('');
+    setPinnedHighlight('');
     setPlaying(false);
     update(atStep(lesson, index, stateRef.current.params));
   }
@@ -87,6 +109,7 @@ export default function App() {
     update(seekState(stateRef.current, lesson, progress));
   }
   function toggle() {
+    if (!hasMotion && !all) return;
     if (reduced) {
       seek(1);
       return;
@@ -186,6 +209,7 @@ export default function App() {
         write: (next, resetCamera) => {
           setPlaying(false);
           setHighlight('');
+          setPinnedHighlight('');
           update(next);
           if (resetCamera) setCamera((c) => c + 1);
           setMenu(false);
@@ -194,16 +218,16 @@ export default function App() {
     [],
   );
   const filtered = lessons.filter((l) =>
-    `${l.title} ${l.subtitle} ${l.tickets.map((t) => ticketMap[t]?.number).join(' ')}`
-      .toLowerCase()
-      .includes(query.toLowerCase()),
+    normalize(
+      `${l.title} ${l.subtitle} ${l.tickets.map((t) => `${ticketMap[t]?.number} ${ticketMap[t]?.title}`).join(' ')}`,
+    ).includes(normalize(query)),
   );
   const catalogSection = (l: Lesson) => {
     const [block, section] = ticketMap[l.tickets[0]].number.split('.');
     return `${block}.${section} · ${section === '1' ? 'Определения' : 'Теоремы'}`;
   };
   return (
-    <HighlightContext.Provider value={{ active: highlight, set: setHighlight }}>
+    <HighlightContext.Provider value={{ active: activeHighlight, set: setHighlight }}>
       <div className="app">
         <a
           href="#lesson-content"
@@ -339,6 +363,12 @@ export default function App() {
                   <button
                     className="play"
                     onClick={toggle}
+                    disabled={!hasMotion && !all}
+                    title={
+                      !hasMotion
+                        ? 'Статическое построение: исследуй параметры или перейди к следующему шагу'
+                        : undefined
+                    }
                     aria-label={playing ? 'Пауза' : 'Воспроизвести шаг'}
                   >
                     {playing ? 'Ⅱ' : '▶'}
@@ -367,6 +397,7 @@ export default function App() {
                     max="1"
                     step="0.001"
                     value={state.progress}
+                    disabled={!hasMotion}
                     onChange={(e) => seek(+e.target.value)}
                     aria-label="Ход текущего шага"
                   />
@@ -403,13 +434,16 @@ export default function App() {
                     {marks[lesson.scene].map(([id, label]) => (
                       <button
                         key={id}
-                        className={highlight === id ? 'selected' : ''}
-                        aria-pressed={highlight === id}
+                        className={activeHighlight === id ? 'selected' : ''}
+                        aria-pressed={activeHighlight === id}
                         onPointerEnter={() => setHighlight(id)}
                         onPointerLeave={() => setHighlight('')}
                         onFocus={() => setHighlight(id)}
                         onBlur={() => setHighlight('')}
-                        onClick={() => setHighlight(highlight === id ? '' : id)}
+                        onClick={() => {
+                          setHighlight('');
+                          setPinnedHighlight((current) => (current === id ? '' : id));
+                        }}
                       >
                         {label}
                       </button>

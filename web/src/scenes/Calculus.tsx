@@ -535,6 +535,90 @@ function Quadrature({ params: p, step, cameraKey }: SceneProps) {
   );
 }
 function Euler({ params: p, step }: SceneProps) {
+  const t = p.t,
+    x = 2 + t;
+  if (step >= 1 && step <= 3) {
+    const fractional = step === 1;
+    const height = (u: number) => (fractional ? u : (u * (1 - u)) / 2);
+    const ymax = fractional ? 1.25 : 0.18;
+    return (
+      <>
+        <Board stretch x={[0.8, 4.2]} y={[-ymax * 0.25, ymax]}>
+          {[1, 2, 3].map((a) => (
+            <g key={a}>
+              <Curve points={graphSample((v) => height(v - a), a, a + 1)} color={C.purple} />
+              {fractional && (
+                <Circle center={[a + 1, 1]} radius={0.025} color={C.purple} fillOpacity={0} />
+              )}
+              <Dot p={[a, 0]} color={C.purple} />
+            </g>
+          ))}
+          <Dot p={[4, 0]} color={C.purple} />
+          <Area f={(v) => height(v - 2)} a={2} b={x} color={C.purple} opacity={0.3} />
+          <Seg a={[x, 0]} b={[x, height(t)]} color={C.gold} dashed />
+          <Dot p={[x, fractional && t === 1 ? 0 : height(t)]} color={C.gold} />
+          <Seg a={[2, -ymax * 0.1]} b={[x, -ymax * 0.1]} color={C.gold} />
+          <Seg a={[x, -ymax * 0.16]} b={[3, -ymax * 0.16]} color={C.cyan} />
+          <Label p={[2.5, ymax * 0.9]}>
+            {fractional ? '{x}: каждый раз от 0 до 1' : 'Ψ(x): максимум 1/8'}
+          </Label>
+        </Board>
+        <Metrics
+          items={[
+            m('x = 2 + t', x),
+            m('{x} = x − ⌊x⌋', t === 1 ? 0 : t, C.purple),
+            m('x − 2 (жёлтый)', t, C.gold),
+            m('3 − x (голубой)', 1 - t, C.cyan),
+            m('Ψ(x)', (t * (1 - t)) / 2, C.purple),
+            m('∫₂ˣ {s} ds', (t * t) / 2),
+            m('∫₂ˣ Ψ(s) ds', (t * t) / 4 - t ** 3 / 6, C.purple),
+            ...(step === 3 ? [m('Полная площадь Ψ на [2,3]', '1/12')] : []),
+          ]}
+        />
+      </>
+    );
+  }
+  if (step === 4) {
+    return (
+      <>
+        <Board stretch x={[1.85, 3.15]} y={[0, 10]}>
+          <Area f={(v) => v * v} a={2} b={3} opacity={0.1} />
+          <Fill
+            points={[
+              ...graphSample((v) => 5 * v - 6, 2, x),
+              ...graphSample((v) => v * v, 2, x).reverse(),
+            ]}
+            color={C.gold}
+            opacity={0.6}
+          />
+          <Curve points={graphSample((v) => v * v, 2, 3)} width={3} />
+          <Seg a={[2, 4]} b={[3, 9]} color={C.gold} />
+          <Seg a={[2, 0]} b={[2, 4]} color={C.gold} />
+          <Seg a={[3, 0]} b={[3, 9]} color={C.gold} />
+          <Seg a={[x, 0]} b={[x, 5 * x - 6]} color={C.purple} dashed />
+          <Dot p={[x, x * x]} color={C.purple} />
+          <Dot p={[x, 5 * x - 6]} color={C.gold} />
+          <Dot p={[2, 4]} label="4" />
+          <Dot p={[3, 9]} label="9" attach="nw" />
+          <Label p={[2.5, 2]}>f(x) = x²</Label>
+          <Label p={[2.5, 9.7]} color={C.gold}>
+            Избыток трапеции: 1/6
+          </Label>
+        </Board>
+        <Metrics
+          items={[
+            m('Подвижная граница x', x, C.purple),
+            m('Накоплено: t²/2 − t³/3', (t * t) / 2 - t ** 3 / 3, C.gold),
+            m('Трапеция T', '13/2', C.gold),
+            m('Интеграл I', '19/3', C.cyan),
+            m('∫₂³ Ψ(x) dx', '1/12', C.purple),
+            m('f″ = 2: R = 2 · 1/12', '1/6', C.purple),
+            m('Точное равенство', 'I = T − R'),
+          ]}
+        />
+      </>
+    );
+  }
   const n = p.n,
     power = p.power,
     scale = n ** power,

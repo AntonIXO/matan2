@@ -62,10 +62,16 @@ export function decodeState(hash: string, lessons: Lesson[]): SceneState {
     undefined,
     q.has('progress') ? clamp(number('progress'), 0, 1) : undefined,
   );
+  const selectedStep = l.steps[state.step];
   for (const p of l.parameters)
-    if (q.has(p.key) && !l.steps[state.step].locked?.includes(p.key)) {
+    if (q.has(p.key)) {
+      const locked = selectedStep.locked?.includes(p.key);
+      // A fixed pose is a mathematical constraint. Other locked values can be
+      // inherited from the previous step and must survive a shared-link reload.
+      if (locked && selectedStep.pose?.[p.key] !== undefined) continue;
       const value = number(p.key, state.params[p.key]);
-      if (q.has('progress')) state.params[p.key] = parameterValue(l, p.key, value, state.step);
+      if (q.has('progress') || locked)
+        state.params[p.key] = parameterValue(l, p.key, value, state.step);
       else state = changeParam(state, l, p.key, value);
     }
   return state;

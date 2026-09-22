@@ -2,6 +2,10 @@ import type { Lesson } from './types';
 import { catalog } from './content/catalog';
 import { geometry } from './content/geometry';
 import { differential } from './content/differential';
+import { asymptotics } from './content/asymptotics';
+import { improperExtra } from './content/improper-extra';
+import { foundations } from './content/foundations';
+import { series } from './content/series';
 export const lessons: Lesson[] = [
   {
     id: 'differentiability',
@@ -62,6 +66,10 @@ export const lessons: Lesson[] = [
   ...differential,
   ...geometry,
   ...catalog,
+  ...asymptotics,
+  ...improperExtra,
+  ...foundations,
+  ...series,
 ];
 
 const entries: Record<string, Record<string, number>> = {
@@ -98,11 +106,11 @@ const entries: Record<string, Record<string, number>> = {
   },
   differentiability: { 'op-b3-07': 3, 'op-b3-08': 3, 'op-b3-09': 0 },
   quadrature: { 'op-b1-17': 0, 'th-b1-28': 1, 'th-b1-29': 2 },
-  'euler-maclaurin': { 'th-b1-30': 0, 'th-b1-15': 3 },
+  'euler-maclaurin': { 'th-b1-30': 0, 'th-b1-15': 6 },
   extrema: { 'th-b1-10': 1, 'th-b1-11': 0, 'th-b1-13': 3 },
   norms: { 'th-b1-34': 2, 'th-b1-35': 3, 'th-b1-36': 1 },
 };
-for (const lesson of lessons) lesson.entrySteps = entries[lesson.id];
+for (const lesson of lessons) lesson.entrySteps = entries[lesson.id] ?? lesson.entrySteps;
 
 export function ticketOrder(id: string) {
   const match = /^(op|th)-b(\d+)-(\d+)$/.exec(id);

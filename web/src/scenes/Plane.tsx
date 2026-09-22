@@ -32,9 +32,20 @@ import {
 } from '../math';
 import Calculus from './Calculus';
 import Abstract from './Abstract';
+import Asymptotics from './Asymptotics';
+import ImproperExtra from './ImproperExtra';
+import Foundations from './Foundations';
+import Series from './Series';
 import { useSmallScreen } from '../useSmallScreen';
 import { useHighlight } from '../Highlight';
+import { Metrics } from '../SceneMetrics';
+export { Metrics };
 export { C };
+function tickSpacing(span: number, pixels: number, minimumPixels: number) {
+  const raw = span / Math.max(2, Math.floor(pixels / minimumPixels));
+  const scale = 10 ** Math.floor(Math.log10(raw));
+  return ([1, 2, 5, 10].find((factor) => factor * scale >= raw) ?? 10) * scale;
+}
 export function Board({
   children,
   x = [-2.8, 2.8],
@@ -51,30 +62,96 @@ export function Board({
   stretch?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null),
-    [height, setHeight] = useState(440);
+    [size, setSize] = useState({ width: 600, height: 440 });
   useEffect(() => {
+    let frame = 0;
     const ob = new ResizeObserver((entries) => {
-      const h = entries[0]?.contentRect.height;
-      if (h > 0) setHeight(h);
+      const box = entries[0]?.contentRect;
+      if (box?.height > 0 && box.width > 0) {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() =>
+          setSize((current) =>
+            Math.abs(current.width - box.width) < 0.5 && Math.abs(current.height - box.height) < 0.5
+              ? current
+              : { width: box.width, height: box.height },
+          ),
+        );
+      }
     });
     if (ref.current) ob.observe(ref.current);
-    return () => ob.disconnect();
+    return () => {
+      ob.disconnect();
+      cancelAnimationFrame(frame);
+    };
   }, []);
+  // Mafs contains both ranges with the same scale unless stretch is requested.
+  const unitsPerPixel = Math.max((x[1] - x[0]) / size.width, (y[1] - y[0]) / size.height);
+  const dx = tickSpacing(stretch ? x[1] - x[0] : unitsPerPixel * size.width, size.width, 70);
+  const dy = tickSpacing(stretch ? y[1] - y[0] : unitsPerPixel * size.height, size.height, 55);
+  const tick = (n: number) => (Math.abs(n) < 1e-12 ? '' : fmt(n, 4));
+  const inRange = (n: number, range: V2) => n >= range[0] && n <= range[1];
+  const xOutside = y[0] > 0 || y[1] < 0;
+  const yOutside = x[0] > 0 || x[1] < 0;
+  const ticks = (range: V2, delta: number) => {
+    const first = Math.ceil(range[0] / delta) * delta;
+    return Array.from(
+      { length: Math.max(0, Math.floor((range[1] - first) / delta) + 1) },
+      (_, i) => first + i * delta,
+    );
+  };
+  const px = stretch ? (x[1] - x[0]) * 0.06 : 0.2;
+  const py = stretch ? (y[1] - y[0]) * 0.09 : 0.2;
   return (
     <div className="board" ref={ref}>
       <Mafs
         key={reset}
-        height={height}
+        height={size.height}
         preserveAspectRatio={stretch ? false : 'contain'}
-        viewBox={{ x, y, padding: 0.2 }}
+        viewBox={{ x: [x[0] - px, x[1] + px], y: [y[0] - py, y[1] + py], padding: 0 }}
         pan={false}
         zoom={false}
       >
         {axes && (
-          <Coordinates.Cartesian
-            xAxis={{ labels: (n) => (n === 0 ? '' : n) }}
-            yAxis={{ labels: (n) => (n === 0 ? '' : n) }}
-          />
+          <>
+            <Coordinates.Cartesian
+              xAxis={{
+                lines: dx,
+                labels: xOutside ? false : (n) => (inRange(n, x) ? tick(n) : ''),
+              }}
+              yAxis={{
+                lines: dy,
+                labels: yOutside ? false : (n) => (inRange(n, y) ? tick(n) : ''),
+              }}
+            />
+            {xOutside &&
+              ticks(x, dx).map((n) => (
+                <Text
+                  key={`x${n}`}
+                  x={n}
+                  y={y[0]}
+                  attach="s"
+                  attachDistance={7}
+                  size={12}
+                  color={C.muted}
+                >
+                  {fmt(n, 4)}
+                </Text>
+              ))}
+            {yOutside &&
+              ticks(y, dy).map((n) => (
+                <Text
+                  key={`y${n}`}
+                  x={x[0]}
+                  y={n}
+                  attach="e"
+                  attachDistance={5}
+                  size={12}
+                  color={C.muted}
+                >
+                  {fmt(n, 4)}
+                </Text>
+              ))}
+          </>
         )}
         {children}
       </Mafs>
@@ -196,21 +273,6 @@ export function Label({
     <Text x={p[0]} y={p[1]} size={size} color={color}>
       {children}
     </Text>
-  );
-}
-export function Metrics({
-  items,
-}: {
-  items: { label: string; value: string | number; color?: string }[];
-}) {
-  return (
-    <div className="scene-metrics" role="status" aria-live="off">
-      {items.map((i, k) => (
-        <span key={k} style={{ color: i.color }}>
-          {i.label} <b>{typeof i.value === 'number' ? fmt(i.value) : i.value}</b>
-        </span>
-      ))}
-    </div>
   );
 }
 export const sample = (f: (t: number) => V2, a = 0, b = TAU, n = 160) => linspace(a, b, n).map(f);
@@ -668,6 +730,27 @@ export function Composition({ params: p, step, onParam }: SceneProps) {
 }
 export default function Plane(props: SceneProps) {
   switch (props.lesson.scene) {
+    case 'series-tail':
+    case 'series-tests':
+    case 'alternating':
+    case 'series-order':
+    case 'series-product':
+      return <Series {...props} />;
+    case 'improper-benchmarks':
+    case 'improper-comparison':
+    case 'oscillatory-integral':
+    case 'sine-integral':
+      return <ImproperExtra {...props} />;
+    case 'lhopital-stolz':
+    case 'tail-limits':
+    case 'piecewise-primitive':
+    case 'chebyshev':
+      return <Foundations {...props} />;
+    case 'primitives':
+    case 'pi-irrational':
+    case 'harmonic-asymptotic':
+    case 'stirling':
+      return <Asymptotics {...props} />;
     case 'path':
       return <PathScene {...props} />;
     case 'length':

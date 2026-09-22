@@ -9,6 +9,30 @@
         "step": 0
       }
     ],
+    "op-b1-02": [
+      {
+        "title": "Один наклон — семейство первообразных",
+        "url": "https://math.devpins.org/s2/#primitives?step=1",
+        "lesson": "primitives",
+        "step": 1
+      }
+    ],
+    "op-b1-03": [
+      {
+        "title": "Один наклон — семейство первообразных",
+        "url": "https://math.devpins.org/s2/#primitives?step=2",
+        "lesson": "primitives",
+        "step": 2
+      }
+    ],
+    "op-b1-04": [
+      {
+        "title": "Один наклон — семейство первообразных",
+        "url": "https://math.devpins.org/s2/#primitives?step=0",
+        "lesson": "primitives",
+        "step": 0
+      }
+    ],
     "op-b1-05": [
       {
         "title": "Площадь, знак и плотность",
@@ -143,6 +167,46 @@
         "step": 0
       }
     ],
+    "op-b1-18": [
+      {
+        "title": "Склеить первообразные непрерывно",
+        "url": "https://math.devpins.org/s2/#piecewise-primitive?step=0",
+        "lesson": "piecewise-primitive",
+        "step": 0
+      }
+    ],
+    "op-b1-19": [
+      {
+        "title": "Склеить первообразные непрерывно",
+        "url": "https://math.devpins.org/s2/#piecewise-primitive?step=1",
+        "lesson": "piecewise-primitive",
+        "step": 1
+      }
+    ],
+    "op-b1-20": [
+      {
+        "title": "Удалить начало, зажать весь хвост",
+        "url": "https://math.devpins.org/s2/#tail-limits?step=0",
+        "lesson": "tail-limits",
+        "step": 0
+      }
+    ],
+    "op-b1-21": [
+      {
+        "title": "Удалить начало, зажать весь хвост",
+        "url": "https://math.devpins.org/s2/#tail-limits?step=1",
+        "lesson": "tail-limits",
+        "step": 1
+      }
+    ],
+    "op-b1-22": [
+      {
+        "title": "Вычесть рост — увидеть константу",
+        "url": "https://math.devpins.org/s2/#harmonic-asymptotic?step=1",
+        "lesson": "harmonic-asymptotic",
+        "step": 1
+      }
+    ],
     "th-b1-01": [
       {
         "title": "Один δ для всего отрезка",
@@ -159,6 +223,14 @@
         "step": 0
       }
     ],
+    "th-b1-03": [
+      {
+        "title": "Один наклон — семейство первообразных",
+        "url": "https://math.devpins.org/s2/#primitives?step=3",
+        "lesson": "primitives",
+        "step": 3
+      }
+    ],
     "th-b1-04": [
       {
         "title": "Площадь, знак и плотность",
@@ -168,6 +240,12 @@
       }
     ],
     "th-b1-05": [
+      {
+        "title": "Один наклон — семейство первообразных",
+        "url": "https://math.devpins.org/s2/#primitives?step=2",
+        "lesson": "primitives",
+        "step": 2
+      },
       {
         "title": "Площадь, знак и плотность",
         "url": "https://math.devpins.org/s2/#integral?step=3",
@@ -181,6 +259,12 @@
         "url": "https://math.devpins.org/s2/#integral?step=4",
         "lesson": "integral",
         "step": 4
+      },
+      {
+        "title": "Склеить первообразные непрерывно",
+        "url": "https://math.devpins.org/s2/#piecewise-primitive?step=2",
+        "lesson": "piecewise-primitive",
+        "step": 2
       }
     ],
     "th-b1-07": [
@@ -194,6 +278,22 @@
         "title": "Обход и ориентированная площадь",
         "url": "https://math.devpins.org/s2/#parametric-area?step=0",
         "lesson": "parametric-area",
+        "step": 0
+      }
+    ],
+    "th-b1-08": [
+      {
+        "title": "Одинаковый порядок даёт положительный вклад",
+        "url": "https://math.devpins.org/s2/#chebyshev?step=0",
+        "lesson": "chebyshev",
+        "step": 0
+      }
+    ],
+    "th-b1-09": [
+      {
+        "title": "Положительное целое не может исчезнуть",
+        "url": "https://math.devpins.org/s2/#pi-irrational?step=0",
+        "lesson": "pi-irrational",
         "step": 0
       }
     ],
@@ -213,6 +313,14 @@
         "step": 0
       }
     ],
+    "th-b1-12": [
+      {
+        "title": "От отношения приращений к отношению величин",
+        "url": "https://math.devpins.org/s2/#lhopital-stolz?step=0",
+        "lesson": "lhopital-stolz",
+        "step": 0
+      }
+    ],
     "th-b1-13": [
       {
         "title": "Что видно около критической точки",
@@ -221,12 +329,20 @@
         "step": 3
       }
     ],
+    "th-b1-14": [
+      {
+        "title": "От отношения приращений к отношению величин",
+        "url": "https://math.devpins.org/s2/#lhopital-stolz?step=3",
+        "lesson": "lhopital-stolz",
+        "step": 3
+      }
+    ],
     "th-b1-15": [
       {
         "title": "Одна парабола на каждом интервале",
-        "url": "https://math.devpins.org/s2/#euler-maclaurin?step=3",
+        "url": "https://math.devpins.org/s2/#euler-maclaurin?step=6",
         "lesson": "euler-maclaurin",
-        "step": 3
+        "step": 6
       }
     ],
     "th-b1-16": [
@@ -403,6 +519,14 @@
         "step": 0
       }
     ],
+    "th-b1-31": [
+      {
+        "title": "Вычесть рост — увидеть константу",
+        "url": "https://math.devpins.org/s2/#harmonic-asymptotic?step=2",
+        "lesson": "harmonic-asymptotic",
+        "step": 2
+      }
+    ],
     "th-b1-32": [
       {
         "title": "Три площади зажимают число",
@@ -414,6 +538,14 @@
         "title": "Гауссов интеграл между двумя эталонами",
         "url": "https://math.devpins.org/s2/#poisson?step=0",
         "lesson": "poisson",
+        "step": 0
+      }
+    ],
+    "th-b1-33": [
+      {
+        "title": "Факториал: убрать рост, найти множитель",
+        "url": "https://math.devpins.org/s2/#stirling?step=0",
+        "lesson": "stirling",
         "step": 0
       }
     ],
@@ -441,12 +573,52 @@
         "step": 1
       }
     ],
+    "th-b1-37": [
+      {
+        "title": "Удалить начало, зажать весь хвост",
+        "url": "https://math.devpins.org/s2/#tail-limits?step=4",
+        "lesson": "tail-limits",
+        "step": 4
+      }
+    ],
+    "th-b1-38": [
+      {
+        "title": "Удалить начало, зажать весь хвост",
+        "url": "https://math.devpins.org/s2/#tail-limits?step=2",
+        "lesson": "tail-limits",
+        "step": 2
+      }
+    ],
+    "th-b1-39": [
+      {
+        "title": "Удалить начало, зажать весь хвост",
+        "url": "https://math.devpins.org/s2/#tail-limits?step=3",
+        "lesson": "tail-limits",
+        "step": 3
+      }
+    ],
+    "th-b1-40": [
+      {
+        "title": "Удалить начало, зажать весь хвост",
+        "url": "https://math.devpins.org/s2/#tail-limits?step=1",
+        "lesson": "tail-limits",
+        "step": 1
+      }
+    ],
     "op-b2-01": [
       {
         "title": "Видимое плато ещё не предел",
         "url": "https://math.devpins.org/s2/#improper?step=0",
         "lesson": "improper",
         "step": 0
+      }
+    ],
+    "op-b2-02": [
+      {
+        "title": "Знаки гасят площадь",
+        "url": "https://math.devpins.org/s2/#oscillatory-integral?step=2",
+        "lesson": "oscillatory-integral",
+        "step": 2
       }
     ],
     "op-b2-03": [
@@ -457,12 +629,102 @@
         "step": 0
       }
     ],
+    "op-b2-04": [
+      {
+        "title": "Знаки гасят площадь",
+        "url": "https://math.devpins.org/s2/#oscillatory-integral?step=0",
+        "lesson": "oscillatory-integral",
+        "step": 0
+      },
+      {
+        "title": "Чередование зажимает сумму",
+        "url": "https://math.devpins.org/s2/#alternating?step=3",
+        "lesson": "alternating",
+        "step": 3
+      }
+    ],
+    "op-b2-05": [
+      {
+        "title": "Кто сильнее: степень или логарифм",
+        "url": "https://math.devpins.org/s2/#improper-benchmarks?step=0",
+        "lesson": "improper-benchmarks",
+        "step": 0
+      },
+      {
+        "title": "Что теряется при пределе, равном единице",
+        "url": "https://math.devpins.org/s2/#series-tests?step=0",
+        "lesson": "series-tests",
+        "step": 0
+      }
+    ],
+    "op-b2-06": [
+      {
+        "title": "Малый член и малый хвост — разные условия",
+        "url": "https://math.devpins.org/s2/#series-tail?step=0",
+        "lesson": "series-tail",
+        "step": 0
+      }
+    ],
+    "op-b2-07": [
+      {
+        "title": "Малый член и малый хвост — разные условия",
+        "url": "https://math.devpins.org/s2/#series-tail?step=3",
+        "lesson": "series-tail",
+        "step": 3
+      }
+    ],
+    "op-b2-08": [
+      {
+        "title": "Малый член и малый хвост — разные условия",
+        "url": "https://math.devpins.org/s2/#series-tail?step=2",
+        "lesson": "series-tail",
+        "step": 2
+      }
+    ],
+    "op-b2-09": [
+      {
+        "title": "Скобки выбирают суммы; перестановка меняет порядок",
+        "url": "https://math.devpins.org/s2/#series-order?step=3",
+        "lesson": "series-order",
+        "step": 3
+      }
+    ],
+    "op-b2-10": [
+      {
+        "title": "Произведение заполняет решётку пар",
+        "url": "https://math.devpins.org/s2/#series-product?step=0",
+        "lesson": "series-product",
+        "step": 0
+      }
+    ],
+    "th-b2-01": [
+      {
+        "title": "Сравнение удерживает площадь",
+        "url": "https://math.devpins.org/s2/#improper-comparison?step=3",
+        "lesson": "improper-comparison",
+        "step": 3
+      }
+    ],
     "th-b2-02": [
       {
         "title": "Видимое плато ещё не предел",
         "url": "https://math.devpins.org/s2/#improper?step=0",
         "lesson": "improper",
         "step": 0
+      },
+      {
+        "title": "Сравнение удерживает площадь",
+        "url": "https://math.devpins.org/s2/#improper-comparison?step=0",
+        "lesson": "improper-comparison",
+        "step": 0
+      }
+    ],
+    "th-b2-03": [
+      {
+        "title": "Кто сильнее: степень или логарифм",
+        "url": "https://math.devpins.org/s2/#improper-benchmarks?step=2",
+        "lesson": "improper-benchmarks",
+        "step": 2
       }
     ],
     "th-b2-04": [
@@ -479,11 +741,137 @@
         "step": 0
       }
     ],
+    "th-b2-05": [
+      {
+        "title": "Знаки гасят площадь",
+        "url": "https://math.devpins.org/s2/#oscillatory-integral?step=0",
+        "lesson": "oscillatory-integral",
+        "step": 0
+      },
+      {
+        "title": "Чередование зажимает сумму",
+        "url": "https://math.devpins.org/s2/#alternating?step=3",
+        "lesson": "alternating",
+        "step": 3
+      }
+    ],
+    "th-b2-06": [
+      {
+        "title": "Знаки гасят площадь",
+        "url": "https://math.devpins.org/s2/#oscillatory-integral?step=1",
+        "lesson": "oscillatory-integral",
+        "step": 1
+      }
+    ],
+    "th-b2-07": [
+      {
+        "title": "Знаки гасят площадь",
+        "url": "https://math.devpins.org/s2/#oscillatory-integral?step=3",
+        "lesson": "oscillatory-integral",
+        "step": 3
+      }
+    ],
+    "th-b2-08": [
+      {
+        "title": "Почему предел равен π/2",
+        "url": "https://math.devpins.org/s2/#sine-integral?step=0",
+        "lesson": "sine-integral",
+        "step": 0
+      }
+    ],
+    "th-b2-09": [
+      {
+        "title": "Малый член и малый хвост — разные условия",
+        "url": "https://math.devpins.org/s2/#series-tail?step=1",
+        "lesson": "series-tail",
+        "step": 1
+      }
+    ],
+    "th-b2-10": [
+      {
+        "title": "Что теряется при пределе, равном единице",
+        "url": "https://math.devpins.org/s2/#series-tests?step=0",
+        "lesson": "series-tests",
+        "step": 0
+      }
+    ],
+    "th-b2-11": [
+      {
+        "title": "Что теряется при пределе, равном единице",
+        "url": "https://math.devpins.org/s2/#series-tests?step=1",
+        "lesson": "series-tests",
+        "step": 1
+      }
+    ],
+    "th-b2-12": [
+      {
+        "title": "Что теряется при пределе, равном единице",
+        "url": "https://math.devpins.org/s2/#series-tests?step=2",
+        "lesson": "series-tests",
+        "step": 2
+      }
+    ],
+    "th-b2-13": [
+      {
+        "title": "Что теряется при пределе, равном единице",
+        "url": "https://math.devpins.org/s2/#series-tests?step=3",
+        "lesson": "series-tests",
+        "step": 3
+      }
+    ],
     "th-b2-14": [
       {
         "title": "Видимое плато ещё не предел",
         "url": "https://math.devpins.org/s2/#improper?step=0",
         "lesson": "improper",
+        "step": 0
+      }
+    ],
+    "th-b2-15": [
+      {
+        "title": "Чередование зажимает сумму",
+        "url": "https://math.devpins.org/s2/#alternating?step=0",
+        "lesson": "alternating",
+        "step": 0
+      }
+    ],
+    "th-b2-16": [
+      {
+        "title": "Чередование зажимает сумму",
+        "url": "https://math.devpins.org/s2/#alternating?step=4",
+        "lesson": "alternating",
+        "step": 4
+      }
+    ],
+    "th-b2-17": [
+      {
+        "title": "Скобки выбирают суммы; перестановка меняет порядок",
+        "url": "https://math.devpins.org/s2/#series-order?step=0",
+        "lesson": "series-order",
+        "step": 0
+      }
+    ],
+    "th-b2-18": [
+      {
+        "title": "Скобки выбирают суммы; перестановка меняет порядок",
+        "url": "https://math.devpins.org/s2/#series-order?step=1",
+        "lesson": "series-order",
+        "step": 1
+      }
+    ],
+    "th-b2-19": [
+      {
+        "title": "Скобки выбирают суммы; перестановка меняет порядок",
+        "url": "https://math.devpins.org/s2/#series-order?step=3",
+        "lesson": "series-order",
+        "step": 3
+      }
+    ],
+    "th-b2-20": [
+      {
+        "title": "Произведение заполняет решётку пар",
+        "url": "https://math.devpins.org/s2/#series-product?step=0",
+        "lesson": "series-product",
         "step": 0
       }
     ],

@@ -19,6 +19,7 @@ import {
 import { useSmallScreen } from '../useSmallScreen';
 import { useHighlight } from '../Highlight';
 import { C } from '../colors';
+import { Metrics } from '../SceneMetrics';
 import { Mafs, Circle, Vector } from 'mafs';
 export function Path3({
   points,
@@ -224,13 +225,15 @@ function Differentiability({ params, step }: SceneProps) {
       <Surface fn={fn} />
       <WireSurface fn={fn} />
       <Axes3 labels={['h₁/r', 'h₂/r', 'Δf/r']} />
+      <Arrow3 a={[0, 0, 0]} b={[u, v, 0]} color={C.cyan} />
+      <Path3 points={[[u, v, 0], fn(u, v)]} dashed color={C.muted} />
+      <Ball p={fn(u, v)} color={step > 0 ? C.red : C.cyan} label={step === 0 ? 'a+h' : undefined} />
       {step > 0 && (
         <>
           <WireSurface fn={plane} color={C.gold} lines={4} semantic="linear" />
           <Path3 points={linspace(-1, 1, 70).map((t) => fn(t, 0))} color={C.cyan} />
           <Path3 points={linspace(-1, 1, 70).map((t) => fn(0, t))} color={C.purple} />
           <Path3 points={[plane(u, v), fn(u, v)]} color={C.red} width={4} semantic="error" />
-          <Ball p={fn(u, v)} color={C.red} />
           <Ball p={plane(u, v)} color={C.gold} />
         </>
       )}
@@ -734,13 +737,7 @@ export default function Space(props: SceneProps) {
         {content}
       </SpaceFrame>
       {['gradient', 'revolution', 'shells'].includes(lesson.scene) && <ControlsInset {...props} />}
-      <div className="scene-metrics">
-        {metrics.map(([k, v]) => (
-          <span key={k}>
-            {k} <b>{fmt(v)}</b>
-          </span>
-        ))}
-      </div>
+      <Metrics items={metrics.map(([label, value]) => ({ label, value }))} />
       <div className="camera-hint">
         {lesson.scene === 'differentiability'
           ? 'Единый масштаб 1/r; начало перенесено в (a,f(a)). '
