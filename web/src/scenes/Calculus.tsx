@@ -9,6 +9,11 @@ import {
   elementaryExtrema,
   convex,
   jumpFunction,
+  oneSidedFunction,
+  secantSlope,
+  oneSidedDerivative,
+  jumpDerivative,
+  tangentGap,
   jensenWeights,
   quadrature,
   wallisIntegral,
@@ -169,7 +174,7 @@ function Substitution({ params: p, step }: SceneProps) {
 }
 function Convexity({ params: p, step, cameraKey }: SceneProps) {
   const f = (x: number) => convex(p.fn, x),
-    x = p.fn === 1 && step === 3 ? 0 : p.x,
+    x = p.fn === 1 && step === 2 ? 0 : p.x,
     a = -1.2,
     b = 1.2,
     pt: V2 = [x, f(x)],
@@ -191,15 +196,7 @@ function Convexity({ params: p, step, cameraKey }: SceneProps) {
             <Dot p={[b, f(b)]} label="x₃" />
           </>
         )}
-        {step === 2 && (
-          <>
-            <Seg a={[x - p.h, f(x - p.h)]} b={pt} color={C.cyan} />
-            <Seg a={pt} b={[x + p.h, f(x + p.h)]} color={C.purple} />
-            <Dot p={[x - p.h, f(x - p.h)]} color={C.cyan} />
-            <Dot p={[x + p.h, f(x + p.h)]} color={C.purple} />
-          </>
-        )}
-        {step >= 3 && (
+        {step >= 2 && (
           <Curve points={graphSample(line, -1.4, 1.4)} color={C.gold} semantic="support" />
         )}
         <Dot p={pt} label={step < 2 ? 'x₂' : 'x₀'} color={C.white} />
@@ -215,15 +212,110 @@ function Convexity({ params: p, step, cameraKey }: SceneProps) {
                 m('наклон 13', (f(b) - f(a)) / (b - a), C.gold),
                 m('наклон 23', right, C.purple),
               ]
-            : step === 2
+            : [
+                m('наклон опоры', slope, C.gold),
+                m('f′₋', p.fn === 1 && x === 0 ? -1 : slope),
+                m('f′₊', p.fn === 1 && x === 0 ? 1 : slope),
+              ]
+        }
+      />
+    </>
+  );
+}
+function OneSidedSlopes({ params: p, step, cameraKey }: SceneProps) {
+  const x1 = -0.6,
+    x2 = p.x2,
+    h = p.h,
+    f = oneSidedFunction,
+    k12 = secantSlope(f, x1, x2),
+    local = [
+      secantSlope(f, x1 - h, x1),
+      secantSlope(f, x1, x1 + h),
+      k12,
+      secantSlope(f, x2 - h, x2),
+      secantSlope(f, x2, x2 + h),
+    ],
+    exact = [
+      oneSidedDerivative(x1, -1),
+      oneSidedDerivative(x1, 1),
+      k12,
+      oneSidedDerivative(x2, -1),
+      oneSidedDerivative(x2, 1),
+    ],
+    cols = [-0.48, -0.24, 0, 0.24, 0.48],
+    colors = [C.cyan, C.cyan, C.gold, C.purple, C.purple],
+    names = ['f′₋(x₁)', 'f′₊(x₁)', 'k₁₂', 'f′₋(x₂)', 'f′₊(x₂)'];
+  const tangent = (x0: number, slope: number, radius = 0.48) =>
+    graphSample((z) => f(x0) + slope * (z - x0), x0 - radius, x0 + radius, 24);
+  return (
+    <>
+      <div className="dual-boards">
+        <div>
+          <div className="pane-title">f(x) · локальные секущие и хорда x₁x₂</div>
+          <Board stretch x={[-1.45, 1.45]} y={[-0.2, 3.25]} reset={cameraKey}>
+            <Curve points={graphSample(f, -1.4, 1.4)} width={3} />
+            <Dot p={[x1, f(x1)]} label="x₁" color={C.white} />
+            {step >= 1 && <Dot p={[x2, f(x2)]} label="x₂" color={C.white} />}
+            {step === 0 && (
+              <>
+                <Seg a={[x1 - h, f(x1 - h)]} b={[x1, f(x1)]} color={C.cyan} />
+                <Seg a={[x1, f(x1)]} b={[x1 + h, f(x1 + h)]} color={C.purple} />
+                <Dot p={[x1 - h, f(x1 - h)]} color={C.cyan} />
+                <Dot p={[x1 + h, f(x1 + h)]} color={C.purple} />
+              </>
+            )}
+            {step >= 1 && <Seg a={[x1, f(x1)]} b={[x2, f(x2)]} color={C.gold} />}
+            {step === 1 && (
+              <>
+                <Seg a={[x1 - h, f(x1 - h)]} b={[x1, f(x1)]} color={C.cyan} />
+                <Seg a={[x1, f(x1)]} b={[x1 + h, f(x1 + h)]} color={C.cyan} />
+                <Seg a={[x2 - h, f(x2 - h)]} b={[x2, f(x2)]} color={C.purple} />
+                <Seg a={[x2, f(x2)]} b={[x2 + h, f(x2 + h)]} color={C.purple} />
+              </>
+            )}
+            {step === 2 && (
+              <>
+                <Curve points={tangent(x1, oneSidedDerivative(x1, 1))} color={C.cyan} dashed />
+                <Curve points={tangent(x2, oneSidedDerivative(x2, -1))} color={C.purple} dashed />
+                <Seg a={[x2, 0]} b={[x2, f(x2)]} color={C.muted} dashed />
+              </>
+            )}
+          </Board>
+        </div>
+        <div>
+          <div className="pane-title">ось наклонов · снизу вверх</div>
+          <Board stretch x={[-0.65, 0.65]} y={[-2.15, 3.05]} axes={false}>
+            <Seg a={[0, -2]} b={[0, 2.95]} color={C.muted} />
+            {(step === 0 ? [0, 1] : step === 2 ? [1, 2, 3] : [0, 1, 2, 3, 4]).map((i) => {
+              const value = step === 2 ? exact[i] : local[i];
+              return (
+                <g key={i}>
+                  <Seg a={[-0.08, exact[i]]} b={[0.08, exact[i]]} color={C.grid} dashed />
+                  <Dot p={[cols[i], value]} label={names[i]} color={colors[i]} />
+                </g>
+              );
+            })}
+            <Label p={[0.46, 2.78]} color={C.white}>k</Label>
+          </Board>
+        </div>
+      </div>
+      <Metrics
+        items={
+          step === 0
+            ? [m('h', h), m('левая секущая', local[0], C.cyan), m('правая секущая', local[1], C.purple)]
+            : step === 1
               ? [
-                  m('левая хорда', (f(x) - f(x - p.h)) / p.h),
-                  m('правая хорда', (f(x + p.h) - f(x)) / p.h, C.purple),
+                  m('k₁−', local[0], C.cyan),
+                  m('k₁+', local[1], C.cyan),
+                  m('k₁₂', local[2], C.gold),
+                  m('k₂−', local[3], C.purple),
+                  m('k₂+', local[4], C.purple),
                 ]
               : [
-                  m('наклон опоры', slope, C.gold),
-                  m('f′₋', p.fn === 1 && x === 0 ? -1 : slope),
-                  m('f′₊', p.fn === 1 && x === 0 ? 1 : slope),
+                  m('f′₊(x₁)', exact[1], C.cyan),
+                  m('k₁₂', exact[2], C.gold),
+                  m('f′₋(x₂)', exact[3], C.purple),
+                  m('x₂', x2),
                 ]
         }
       />
@@ -233,70 +325,172 @@ function Convexity({ params: p, step, cameraKey }: SceneProps) {
 function Jumps({ params: p, step, cameraKey }: SceneProps) {
   const k = p.k,
     x = k - 1,
-    lower = -0.75 + 0.5 * k,
-    upper = lower + 0.5;
+    lower = jumpDerivative(x, -1),
+    upper = jumpDerivative(x, 1),
+    rationals = [-0.5, 0, 0.5],
+    levels = [-0.75, -0.25, 0.25, 0.75],
+    breaks = [-1, 0, 1] as const;
   return (
     <>
-      <Board stretch x={[-1.8, 1.8]} y={[-1.2, 1.8]} reset={cameraKey}>
-        <Curve points={graphSample(jumpFunction, -1.6, 1.6)} width={3} />
-        {[-1, 0, 1].map((x, i) => (
-          <Dot
-            key={x}
-            p={[x, jumpFunction(x)]}
-            label={'x' + (i + 1)}
-            color={i === k ? C.gold : C.muted}
-          />
-        ))}
-        <Curve
-          points={graphSample((z) => jumpFunction(x) + lower * (z - x), x - 0.65, x)}
-          color={C.gold}
-        />
-        <Curve
-          points={graphSample((z) => jumpFunction(x) + upper * (z - x), x, x + 0.65)}
-          color={C.purple}
-        />
-        {step >= 1 && (
-          <>
-            <Seg a={[-1.1, -0.65]} b={[1.1, -0.65]} color={C.muted} />
-            {[0, 1, 2].map((i) => {
-              const a = -0.75 + 0.5 * i,
-                b = a + 0.5;
-              return (
-                <g key={i}>
-                  <Curve
-                    points={[
-                      [a, -0.65],
-                      [b, -0.65],
-                    ]}
-                    color={i === k ? C.gold : C.cyan}
-                    width={6}
-                  />
-                  <Circle
-                    center={[a, -0.65]}
-                    radius={0.025}
-                    color={C.white}
-                    fillOpacity={1}
-                    svgEllipseProps={{ style: { fill: '#0d1520' } }}
-                  />
-                  <Circle
-                    center={[b, -0.65]}
-                    radius={0.025}
-                    color={C.white}
-                    fillOpacity={1}
-                    svgEllipseProps={{ style: { fill: '#0d1520' } }}
-                  />
-                  {step === 2 && (
-                    <Dot p={[(a + b) / 2, -0.65]} label={['−½', '0', '½'][i]} color={C.purple} />
-                  )}
-                </g>
-              );
-            })}
-            <Label p={[0, -1]}>Открытые промежутки на оси наклонов</Label>
-          </>
-        )}
-      </Board>
+      <div className="dual-boards">
+        <div>
+          <div className="pane-title">f(x)=¼(|x+1|+|x|+|x−1|) · изломы</div>
+          <Board stretch x={[-1.7, 1.7]} y={[-0.05, 1.45]} reset={cameraKey}>
+            <Curve points={graphSample(jumpFunction, -1.6, 1.6)} width={3} />
+            {breaks.map((v, i) => (
+              <Dot key={v} p={[v, jumpFunction(v)]} label={'x' + (i + 1)} color={i === k ? C.gold : C.muted} />
+            ))}
+            <Curve points={graphSample((z) => jumpFunction(x) + lower * (z - x), x - 0.62, x, 20)} color={C.gold} />
+            <Curve points={graphSample((z) => jumpFunction(x) + upper * (z - x), x, x + 0.62, 20)} color={C.purple} />
+          </Board>
+        </div>
+        <div>
+          <div className="pane-title">x ↦ f′₋(x) · монотонная ступенчатая функция</div>
+          <Board stretch x={[-1.7, 1.7]} y={[-1, 1]}>
+            {[
+              [-1.6, -1, levels[0]],
+              [-1, 0, levels[1]],
+              [0, 1, levels[2]],
+              [1, 1.6, levels[3]],
+            ].map(([a, b, y], i) => (
+              <Curve key={i} points={[[a, y], [b, y]]} color={i === k || i === k + 1 ? C.cyan : C.muted} width={3} />
+            ))}
+            {breaks.map((v, i) => (
+              <g key={v}>
+                <Circle center={[v, levels[i]]} radius={0.035} color={C.cyan} fillOpacity={1} />
+                <Circle
+                  center={[v, levels[i + 1]]}
+                  radius={0.035}
+                  color={C.cyan}
+                  fillOpacity={1}
+                  svgEllipseProps={{ style: { fill: '#0d1520' } }}
+                />
+                <Seg a={[v, levels[i]]} b={[v, levels[i + 1]]} color={i === k ? C.gold : C.grid} dashed />
+                {step === 2 && <Dot p={[v, rationals[i]]} label={['q₁=−½', 'q₂=0', 'q₃=½'][i]} color={C.purple} />}
+              </g>
+            ))}
+            <Dot p={[x, lower]} label="f′₋(x)" color={C.gold} />
+          </Board>
+        </div>
+      </div>
       <Metrics
-        items={[m('f′₋(x)', lower, C.gold), m('f′₊(x)', upper, C.purple), m('скачок', 0.5)]}
+        items={[
+          m('x', x),
+          m('f′₋(x)', lower, C.gold),
+          m('f′₊(x)', upper, C.purple),
+          m(step === 2 ? 'qₓ' : 'скачок', step === 2 ? rationals[k] : upper - lower),
+        ]}
+      />
+    </>
+  );
+}
+function TangentSupport({ params: p, step, cameraKey }: SceneProps) {
+  const parabola = (z: number) => z * z,
+    parabolaPrime = (z: number) => 2 * z,
+    cubic = (z: number) => z * z * z,
+    cubicPrime = (z: number) => 3 * z * z,
+    x = p.x,
+    x1 = -1.2,
+    x2 = 1.2,
+    probe = 1.25,
+    tangent = (z: number) => parabola(x) + parabolaPrime(x) * (z - x),
+    leftSlope = secantSlope(parabola, x1, x),
+    rightSlope = secantSlope(parabola, x, x2),
+    derivative = parabolaPrime(x);
+  return (
+    <>
+      <div className="dual-boards">
+        <div>
+          <div className="pane-title">{step === 3 ? 'f(x)=x³ · касательная в 0' : 'f(x)=x² · касательная снизу'}</div>
+          <Board stretch x={[-1.55, 1.55]} y={step === 3 ? [-2.2, 2.2] : [-1, 2.55]} reset={cameraKey}>
+            {step === 3 ? (
+              <>
+                <Curve points={graphSample(cubic, -1.4, 1.4)} width={3} />
+                <Seg a={[-1.45, 0]} b={[1.45, 0]} color={C.gold} />
+                <Seg a={[p.z, 0]} b={[p.z, cubic(p.z)]} color={p.z < 0 ? C.red : C.gold} />
+                <Dot p={[p.z, cubic(p.z)]} label="z" color={p.z < 0 ? C.red : C.gold} />
+              </>
+            ) : (
+              <>
+                <Curve points={graphSample(parabola, -1.45, 1.45)} width={3} />
+                <Curve points={graphSample(tangent, -1.45, 1.45, 24)} color={C.gold} />
+                <Dot p={[x, parabola(x)]} label="x" color={C.gold} />
+                {step === 0 && (
+                  <>
+                    <Seg a={[probe, tangent(probe)]} b={[probe, parabola(probe)]} color={C.purple} />
+                    <Dot p={[probe, parabola(probe)]} label="z" color={C.purple} />
+                  </>
+                )}
+                {step >= 1 && (
+                  <>
+                    <Seg a={[x1, tangent(x1)]} b={[x1, parabola(x1)]} color={C.cyan} />
+                    <Seg a={[x2, tangent(x2)]} b={[x2, parabola(x2)]} color={C.purple} />
+                    <Dot p={[x1, parabola(x1)]} label="x₁" color={C.cyan} />
+                    <Dot p={[x2, parabola(x2)]} label="x₂" color={C.purple} />
+                  </>
+                )}
+                {step === 2 && (
+                  <>
+                    <Seg a={[x1, parabola(x1)]} b={[x, parabola(x)]} color={C.cyan} />
+                    <Seg a={[x, parabola(x)]} b={[x2, parabola(x2)]} color={C.purple} />
+                  </>
+                )}
+              </>
+            )}
+          </Board>
+        </div>
+        <div>
+          <div className="pane-title">
+            {step === 2 ? 'порядок наклонов' : step === 3 ? 'касательный зазор z³' : 'g(z)=f(z)−Tₓ(z)'}
+          </div>
+          {step <= 1 ? (
+            <Board stretch x={[-1.55, 1.55]} y={[-0.2, 4.2]}>
+              <Curve points={graphSample((z) => tangentGap(parabola, parabolaPrime, x, z), -1.45, 1.45)} color={C.purple} width={3} />
+              <Seg a={[-1.45, 0]} b={[1.45, 0]} color={C.muted} />
+              {step === 0 ? (
+                <Dot p={[probe, tangentGap(parabola, parabolaPrime, x, probe)]} label="(z−x)²" color={C.purple} />
+              ) : (
+                <>
+                  <Dot p={[x1, tangentGap(parabola, parabolaPrime, x, x1)]} label="Δ₁" color={C.cyan} />
+                  <Dot p={[x2, tangentGap(parabola, parabolaPrime, x, x2)]} label="Δ₂" color={C.purple} />
+                </>
+              )}
+            </Board>
+          ) : step === 2 ? (
+            <Board stretch x={[-0.65, 0.65]} y={[-2.7, 2.7]} axes={false}>
+              <Seg a={[0, -2.5]} b={[0, 2.5]} color={C.muted} />
+              {[
+                [-0.34, leftSlope, 'k₁x', C.cyan],
+                [0, derivative, 'f′(x)', C.gold],
+                [0.34, rightSlope, 'kx₂', C.purple],
+              ].map(([cx, value, label, color]) => (
+                <Dot key={String(label)} p={[cx as number, value as number]} label={label as string} color={color as string} />
+              ))}
+            </Board>
+          ) : (
+            <Board stretch x={[-1.45, 1.45]} y={[-2.1, 2.1]}>
+              <Fill points={[[-1.4, 0], ...graphSample(cubic, -1.4, 0), [0, 0]]} color={C.red} opacity={0.18} />
+              <Curve points={graphSample((z) => tangentGap(cubic, cubicPrime, 0, z), -1.4, 1.4)} color={C.red} width={3} />
+              <Seg a={[-1.4, 0]} b={[1.4, 0]} color={C.muted} />
+              <Dot p={[p.z, tangentGap(cubic, cubicPrime, 0, p.z)]} label="зазор" color={p.z < 0 ? C.red : C.gold} />
+            </Board>
+          )}
+        </div>
+      </div>
+      <Metrics
+        items={
+          step === 0
+            ? [m('x₀', x), m('z', probe), m('f(z)−T(z)', tangentGap(parabola, parabolaPrime, x, probe), C.purple)]
+            : step === 1
+              ? [
+                  m('x', x),
+                  m('Δ₁', tangentGap(parabola, parabolaPrime, x, x1), C.cyan),
+                  m('Δ₂', tangentGap(parabola, parabolaPrime, x, x2), C.purple),
+                ]
+              : step === 2
+                ? [m('левая хорда', leftSlope, C.cyan), m('f′(x)', derivative, C.gold), m('правая хорда', rightSlope, C.purple)]
+                : [m('z', p.z), m('f(z)−T₀(z)', tangentGap(cubic, cubicPrime, 0, p.z), p.z < 0 ? C.red : C.gold)]
+        }
       />
     </>
   );
@@ -858,8 +1052,12 @@ export default function Calculus(props: SceneProps) {
       return <Substitution {...props} />;
     case 'convexity':
       return <Convexity {...props} />;
+    case 'one-sided-slopes':
+      return <OneSidedSlopes {...props} />;
     case 'jumps':
       return <Jumps {...props} />;
+    case 'tangent-support':
+      return <TangentSupport {...props} />;
     case 'convex-set':
       return <ConvexSet {...props} />;
     case 'jensen':

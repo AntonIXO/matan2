@@ -489,7 +489,7 @@ input[type='checkbox'] {
   display: block;
   margin-top: 17px;
 }
-.parameter > span {
+.parameter > label {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -501,6 +501,37 @@ input[type='checkbox'] {
   font-variant-numeric: tabular-nums;
   color: var(--cyan);
   font-size: 14px;
+}
+.parameter-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.parameter-controls input {
+  min-width: 0;
+  flex: 1;
+}
+.parameter-play {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 12px;
+}
+.parameter-play[aria-pressed='true'] {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.parameter-play:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.loop-indicator {
+  color: var(--cyan);
+  white-space: nowrap;
+  font-size: 12px;
 }
 .insight {
   display: flex;
@@ -822,7 +853,7 @@ input[type='checkbox'] {
   .parameters {
     margin: 8px 0 0;
   }
-  .parameter > span {
+  .parameter > label {
     font-size: 14px;
   }
   .insight p {
@@ -995,7 +1026,10 @@ input[type='checkbox'] {
   .scene-substitution,
   .scene-primitives,
   .scene-chebyshev,
-  .scene-piecewise-primitive {
+  .scene-piecewise-primitive,
+  .scene-one-sided-slopes,
+  .scene-jumps,
+  .scene-tangent-support {
     height: 650px !important;
   }
   .board {

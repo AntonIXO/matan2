@@ -17,6 +17,28 @@ export function elementaryExtrema(kind: number, a: number, b: number) {
 }
 export const convex = (kind: number, x: number) => (kind === 0 ? x * x : Math.abs(x));
 export const jumpFunction = (x: number) => (Math.abs(x + 1) + Math.abs(x) + Math.abs(x - 1)) / 4;
+export const oneSidedFunction = (x: number) =>
+  x * x + 0.4 * Math.abs(x + 0.6) + 0.2 * Math.abs(x - 0.6);
+export function secantSlope(f: (x: number) => number, a: number, b: number) {
+  return (f(b) - f(a)) / (b - a);
+}
+function sideSign(x: number, side: -1 | 1) {
+  return Math.abs(x) < 1e-12 ? side : Math.sign(x);
+}
+export function oneSidedDerivative(x: number, side: -1 | 1) {
+  return 2 * x + 0.4 * sideSign(x + 0.6, side) + 0.2 * sideSign(x - 0.6, side);
+}
+export function jumpDerivative(x: number, side: -1 | 1 = -1) {
+  return (sideSign(x + 1, side) + sideSign(x, side) + sideSign(x - 1, side)) / 4;
+}
+export function tangentGap(
+  f: (x: number) => number,
+  derivative: (x: number) => number,
+  x0: number,
+  z: number,
+) {
+  return f(z) - (f(x0) + derivative(x0) * (z - x0));
+}
 export function jensenWeights(w: number, third: number) {
   return [(1 - third) * w, (1 - third) * (1 - w), third];
 }

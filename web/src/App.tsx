@@ -3,7 +3,8 @@ import { lessons } from './lessons';
 import Formula from './Formula';
 import type { Params, Lesson } from './types';
 import notes from './generated/notes.json';
-import { clamp, fmt } from './math';
+import { fmt } from './math';
+import { advanceTrack, createTrack, parameterMotion, type PlaybackTrack } from './playback';
 import { registerSceneTools } from './webmcp';
 import { HighlightContext, marks } from './Highlight';
 const Space = lazy(() => import('./scenes/Space'));
@@ -17,7 +18,7 @@ import {
   changeParam,
   parameterValue,
   effectiveParameter,
-  interpolate,
+  stepMotions,
 } from './state';
 const readState = () => decodeState(location.hash, lessons);
 const normalize = (value: string) => value.toLowerCase().replaceAll('ё', 'е').trim();
@@ -32,12 +33,16 @@ export default function App() {
     [menu, setMenu] = useState(false),
     [camera, setCamera] = useState(0),
     [copied, setCopied] = useState(false);
+  const [activeKeys, setActiveKeys] = useState<string[]>([]);
+  const tracksRef = useRef<PlaybackTrack[]>([]);
+  const pausedTracksRef = useRef(new Map<string, PlaybackTrack>());
   const [reduced, setReduced] = useState(
     () => matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
   const lesson = lessons.find((l) => l.id === state.id)!,
     step = lesson.steps[state.step];
-  const hasMotion = !!step.motion && step.motion.from !== step.motion.to;
+  const hasMotion = stepMotions(step).some((m) => !!parameterMotion(lesson, state.step, m.key));
+  const canPlay = hasMotion || all || activeKeys.length > 0 || pausedTracksRef.current.size > 0;
   const activeHighlight = highlight || pinnedHighlight;
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -58,7 +63,7 @@ export default function App() {
   }, []);
   useEffect(() => {
     const fn = (event: HashChangeEvent) => {
-      setPlaying(false);
+      pause(true);
       setHighlight('');
       setPinnedHighlight('');
       // A playback frame may replace location.hash before this event is delivered.
@@ -76,10 +81,27 @@ export default function App() {
     stateRef.current = next;
     setState(next);
   }
+  function setTracks(tracks: PlaybackTrack[]) {
+    tracksRef.current = tracks;
+    setActiveKeys(tracks.map((track) => track.motion.key));
+  }
+  function pause(clear = false) {
+    setPlaying(false);
+    if (clear) {
+      setTracks([]);
+      pausedTracksRef.current.clear();
+    }
+  }
+  function defaultTracks(s: typeof state, forward = false) {
+    const l = lessons.find((l) => l.id === s.id)!;
+    return stepMotions(l.steps[s.step])
+      .filter((m) => parameterMotion(l, s.step, m.key))
+      .map((m) => createTrack(m, s.params[m.key], forward ? s.progress : undefined));
+  }
   function navigate(l: Lesson) {
     setHighlight('');
     setPinnedHighlight('');
-    setPlaying(false);
+    pause(true);
     const search = normalize(query);
     const matchedTicket =
       search &&
@@ -97,70 +119,108 @@ export default function App() {
   function chooseStep(index: number) {
     setHighlight('');
     setPinnedHighlight('');
-    setPlaying(false);
+    pause(true);
     update(atStep(lesson, index, stateRef.current.params));
   }
   function param(key: string, value: number) {
-    setPlaying(false);
-    setState((s) => changeParam(s, lesson, key, value));
+    pausedTracksRef.current.delete(key);
+    if (all) pause(true);
+    else {
+      const remaining = tracksRef.current.filter((track) => track.motion.key !== key);
+      setTracks(remaining);
+      if (!remaining.length) pause();
+    }
+    update(changeParam(stateRef.current, lesson, key, value));
   }
   function seek(progress: number) {
-    setPlaying(false);
+    pause(true);
     update(seekState(stateRef.current, lesson, progress));
   }
   function toggle() {
-    if (!hasMotion && !all) return;
+    if (playing) {
+      pause();
+      return;
+    }
+    if (!hasMotion && !all && !tracksRef.current.length && !pausedTracksRef.current.size) return;
     if (reduced) {
       seek(1);
       return;
     }
-    if (playing) {
-      setPlaying(false);
-      return;
-    }
-    if (stateRef.current.progress >= 1) {
-      const m = step.motion;
-      if (!m || Math.abs(stateRef.current.params[m.key] - m.to) < 1e-7) seek(0);
-      else update({ ...stateRef.current, progress: 0 });
+    if (all && stateRef.current.progress >= 1) seek(0);
+    if (all) setTracks(defaultTracks(stateRef.current, true));
+    else if (!tracksRef.current.length) {
+      setTracks(
+        pausedTracksRef.current.size
+          ? [...pausedTracksRef.current.values()]
+          : defaultTracks(stateRef.current),
+      );
+      pausedTracksRef.current.clear();
     }
     setPlaying(true);
+  }
+  function toggleParameter(key: string) {
+    const motion = parameterMotion(lesson, state.step, key);
+    if (!motion) return;
+    if (reduced) {
+      param(key, motion.to);
+      return;
+    }
+    const existing = tracksRef.current.find((track) => track.motion.key === key);
+    const resumed = () => {
+      const saved = all ? undefined : (existing ?? pausedTracksRef.current.get(key));
+      pausedTracksRef.current.delete(key);
+      return saved ?? createTrack(motion, stateRef.current.params[key]);
+    };
+    let tracks: PlaybackTrack[];
+    if (playing && !all) {
+      if (existing) {
+        pausedTracksRef.current.set(key, existing);
+        tracks = tracksRef.current.filter((track) => track.motion.key !== key);
+      } else tracks = [...tracksRef.current, resumed()];
+    } else {
+      if (all) pausedTracksRef.current.clear();
+      else
+        for (const track of tracksRef.current)
+          if (track.motion.key !== key) pausedTracksRef.current.set(track.motion.key, track);
+      tracks = [resumed()];
+    }
+    setAll(false);
+    setTracks(tracks);
+    setPlaying(tracks.length > 0);
   }
   useEffect(() => {
     if (!playing) return;
     let raf = 0,
-      previous = 0,
-      anchor = stateRef.current;
+      previous: number | undefined;
     const tick = (time: number) => {
-      if (!previous) previous = time;
+      if (previous === undefined) previous = time;
       const dt = Math.min((time - previous) / 1000, 0.1) * speed;
       previous = time;
       const s = stateRef.current,
         l = lessons.find((l) => l.id === s.id)!,
-        st = l.steps[s.step],
-        progress = Math.min(1, s.progress + dt / (st.duration || 6));
-      let params = s.params;
-      if (st.motion) {
-        const m = st.motion,
-          t = clamp((progress - anchor.progress) / Math.max(1e-9, 1 - anchor.progress), 0, 1);
-        params = {
-          ...params,
-          [m.key]: parameterValue(
-            l,
-            m.key,
-            interpolate(anchor.params[m.key], m.to, t, m.log),
-            s.step,
-          ),
-        };
-      }
+        st = l.steps[s.step];
+      let progress = all ? Math.min(1, s.progress + dt / (st.duration || 6)) : s.progress;
+      const params = { ...s.params };
+      const primary = stepMotions(st)[0]?.key;
+      tracksRef.current = tracksRef.current.map((track) => {
+        const next = advanceTrack(track, dt, st.duration || 6, !all);
+        params[track.motion.key] = parameterValue(l, track.motion.key, next.value, s.step);
+        if (!all && track.motion.key === primary) progress = next.track.progress;
+        return next.track;
+      });
       let next = { ...s, progress, params };
-      if (progress >= 1) {
-        if (all && s.step < l.steps.length - 1) {
+      let finished = false;
+      if (all && progress >= 1) {
+        if (s.step < l.steps.length - 1) {
           next = atStep(l, s.step + 1, params, 0);
-          anchor = next;
-        } else setPlaying(false);
+          setTracks(defaultTracks(next, true));
+        } else {
+          pause(true);
+          finished = true;
+        }
       }
       update(next);
-      if (progress < 1 || (all && next.step !== s.step)) raf = requestAnimationFrame(tick);
+      if (!finished) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
@@ -197,7 +257,7 @@ export default function App() {
   }, [reduced]);
   useEffect(() => {
     const hide = () => {
-      if (document.hidden) setPlaying(false);
+      if (document.hidden) pause();
     };
     document.addEventListener('visibilitychange', hide);
     return () => document.removeEventListener('visibilitychange', hide);
@@ -207,7 +267,7 @@ export default function App() {
       registerSceneTools({
         read: () => stateRef.current,
         write: (next, resetCamera) => {
-          setPlaying(false);
+          pause(true);
           setHighlight('');
           setPinnedHighlight('');
           update(next);
@@ -363,16 +423,23 @@ export default function App() {
                   <button
                     className="play"
                     onClick={toggle}
-                    disabled={!hasMotion && !all}
+                    disabled={!canPlay}
                     title={
-                      !hasMotion
-                        ? 'Статическое построение: исследуй параметры или перейди к следующему шагу'
-                        : undefined
+                      all
+                        ? 'Последовательно пройти все шаги'
+                        : canPlay
+                          ? 'Повторять движение туда-обратно'
+                          : 'Статическое построение: исследуй параметры или перейди к следующему шагу'
                     }
                     aria-label={playing ? 'Пауза' : 'Воспроизвести шаг'}
                   >
                     {playing ? 'Ⅱ' : '▶'}
                   </button>
+                  {!all && (
+                    <span className="loop-indicator" title="Движение туда-обратно">
+                      ↔ ∞
+                    </span>
+                  )}
                   <button
                     onClick={() => chooseStep(state.step - 1)}
                     disabled={state.step === 0}
@@ -414,7 +481,10 @@ export default function App() {
                     <input
                       type="checkbox"
                       checked={all}
-                      onChange={(e) => setAll(e.target.checked)}
+                      onChange={(e) => {
+                        pause(true);
+                        setAll(e.target.checked);
+                      }}
                     />
                     Все шаги
                   </label>
@@ -455,7 +525,7 @@ export default function App() {
                     ИССЛЕДУЙ{' '}
                     <button
                       onClick={() => {
-                        setPlaying(false);
+                        pause(true);
                         update(atStep(lesson, state.step));
                       }}
                     >
@@ -468,11 +538,11 @@ export default function App() {
                         <button
                           key={pr.name}
                           onClick={() => {
-                            setPlaying(false);
-                            setState((s) =>
+                            pause(true);
+                            update(
                               Object.entries(pr.values).reduce(
                                 (s, [k, v]) => changeParam(s, lesson, k, v),
-                                s,
+                                stateRef.current,
                               ),
                             );
                           }}
@@ -485,25 +555,38 @@ export default function App() {
                   {lesson.parameters
                     .map((base) => effectiveParameter(lesson, base.key, state.step)!)
                     .map((p) => (
-                      <label className="parameter" key={p.key}>
-                        <span>
+                      <div className="parameter" key={p.key}>
+                        <label htmlFor={`parameter-${p.key}`}>
                           {p.label}
                           <output>
                             {fmt(state.params[p.key])}
                             {p.unit}
                           </output>
-                        </span>
-                        <input
-                          type="range"
-                          disabled={step.locked?.includes(p.key)}
-                          min={p.min}
-                          max={p.max}
-                          step={p.step && p.step >= 1 ? p.step : 'any'}
-                          value={state.params[p.key]}
-                          onChange={(e) => param(p.key, +e.target.value)}
-                          aria-label={p.label}
-                        />
-                      </label>
+                        </label>
+                        <div className="parameter-controls">
+                          <input
+                            id={`parameter-${p.key}`}
+                            type="range"
+                            disabled={step.locked?.includes(p.key)}
+                            min={p.min}
+                            max={p.max}
+                            step={p.step && p.step >= 1 ? p.step : 'any'}
+                            value={state.params[p.key]}
+                            onChange={(e) => param(p.key, +e.target.value)}
+                            aria-label={p.label}
+                          />
+                          <button
+                            className="parameter-play"
+                            disabled={!parameterMotion(lesson, state.step, p.key)}
+                            aria-label={`${playing && activeKeys.includes(p.key) ? 'Пауза параметра' : 'Запустить параметр'} ${p.label}`}
+                            aria-pressed={playing && activeKeys.includes(p.key)}
+                            title="Независимое движение туда-обратно; можно запустить несколько параметров"
+                            onClick={() => toggleParameter(p.key)}
+                          >
+                            {playing && activeKeys.includes(p.key) ? 'Ⅱ' : '▶'}
+                          </button>
+                        </div>
+                      </div>
                     ))}
                 </div>
                 <div className="insight">

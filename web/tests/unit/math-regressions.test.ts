@@ -1,5 +1,12 @@
 import { expect, test } from 'bun:test';
-import { lp } from '../../src/models';
+import {
+  jumpDerivative,
+  lp,
+  oneSidedDerivative,
+  oneSidedFunction,
+  secantSlope,
+  tangentGap,
+} from '../../src/models';
 import { integrate } from '../../src/math';
 import { improperExtra } from '../../src/content/improper-extra';
 import {
@@ -88,4 +95,62 @@ test('формулы новых интегральных сцен отображ
       expect(step.formula).not.toMatch(/[\u0000-\u001f]/);
       expect(() => katex.renderToString(step.formula, { throwOnError: true })).not.toThrow();
     }
+});
+
+test('1.2.22: пять наклонов имеют точные значения и сохраняют зажим при движении x₂', () => {
+  const x1 = -0.6,
+    x2 = 0.6,
+    chain = [
+      oneSidedDerivative(x1, -1),
+      oneSidedDerivative(x1, 1),
+      secantSlope(oneSidedFunction, x1, x2),
+      oneSidedDerivative(x2, -1),
+      oneSidedDerivative(x2, 1),
+    ],
+    expected = [-1.8, -1, 0.2, 1.4, 1.8];
+
+  chain.forEach((value, i) => expect(value).toBeCloseTo(expected[i], 12));
+  for (let i = 1; i < chain.length; i++) expect(chain[i - 1]).toBeLessThan(chain[i]);
+
+  const left = oneSidedDerivative(x1, 1);
+  for (let i = 0; i <= 135; i++) {
+    const movingX2 = -0.2 + i * 0.01,
+      chord = secantSlope(oneSidedFunction, x1, movingX2),
+      right = oneSidedDerivative(movingX2, -1);
+    expect(chord).toBeGreaterThanOrEqual(left - 1e-12);
+    expect(chord).toBeLessThanOrEqual(right + 1e-12);
+  }
+});
+
+test('1.2.23: f′₋ монотонна, интервалы скачков не пересекаются и содержат разные рациональные', () => {
+  const sample = [-1.5, -1, -0.6, 0, 0.4, 1, 1.5].map((x) => jumpDerivative(x, -1));
+  for (let i = 1; i < sample.length; i++) expect(sample[i - 1]).toBeLessThanOrEqual(sample[i]);
+
+  const corners = [-1, 0, 1],
+    rationals = [-0.5, 0, 0.5],
+    intervals = corners.map((x) => [jumpDerivative(x, -1), jumpDerivative(x, 1)] as const);
+  for (let i = 0; i < intervals.length; i++) {
+    expect(intervals[i][0]).toBeLessThan(rationals[i]);
+    expect(rationals[i]).toBeLessThan(intervals[i][1]);
+    if (i) expect(intervals[i - 1][1]).toBeLessThanOrEqual(intervals[i][0]);
+  }
+  expect(new Set(rationals).size).toBe(rationals.length);
+});
+
+test('1.2.24: касательный зазор параболы — квадрат, у x³ в нуле меняет знак', () => {
+  const square = (x: number) => x * x,
+    squarePrime = (x: number) => 2 * x,
+    cube = (x: number) => x * x * x,
+    cubePrime = (x: number) => 3 * x * x;
+
+  for (const x0 of [-0.8, -0.1, 0.6])
+    for (const z of [-1.2, 0, 1.2]) {
+      const gap = tangentGap(square, squarePrime, x0, z);
+      expect(gap).toBeCloseTo((z - x0) ** 2, 12);
+      expect(gap).toBeGreaterThanOrEqual(-1e-12);
+    }
+
+  expect(tangentGap(cube, cubePrime, 0, -0.8)).toBeLessThan(0);
+  expect(tangentGap(cube, cubePrime, 0, 0)).toBe(0);
+  expect(tangentGap(cube, cubePrime, 0, 0.8)).toBeGreaterThan(0);
 });

@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import katex from 'katex';
 import { series } from '../../src/content/series';
-import { atStep, seekState } from '../../src/state';
+import { atStep, seekState, stepMotions } from '../../src/state';
 import {
   partialSums,
   harmonicBlock,
@@ -90,9 +90,12 @@ describe('Числовые ряды: конечные тождества и гр
         const state = atStep(lesson, i);
         const first = seekState(state, lesson, 0);
         const last = seekState(state, lesson, 1);
-        expect(step.motion).toBeDefined();
-        expect(first.params[step.motion!.key]).not.toBe(last.params[step.motion!.key]);
-        expect(step.locked ?? []).not.toContain(step.motion!.key);
+        const motions = stepMotions(step);
+        expect(motions.length).toBeGreaterThan(0);
+        for (const motion of motions) {
+          expect(first.params[motion.key]).not.toBe(last.params[motion.key]);
+          expect(step.locked ?? []).not.toContain(motion.key);
+        }
       }
   });
 });

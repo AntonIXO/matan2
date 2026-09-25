@@ -41,6 +41,7 @@ import {
   seekState,
   parameterValue,
   effectiveParameter,
+  stepMotions,
 } from '../../src/state';
 import {
   quadrature,
@@ -303,8 +304,8 @@ describe('Каталог, состояния и PDF', () => {
           expect(state.params[p.key]).toBeGreaterThanOrEqual(p.min - 1e-8);
           expect(state.params[p.key]).toBeLessThanOrEqual(p.max + 1e-8);
         }
-        if (st.motion) {
-          expect(l.parameters.some((p) => p.key === st.motion!.key)).toBe(true);
+        for (const motion of stepMotions(st)) {
+          expect(l.parameters.some((p) => p.key === motion.key)).toBe(true);
         }
       });
     }

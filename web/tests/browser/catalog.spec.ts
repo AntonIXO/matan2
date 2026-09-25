@@ -106,7 +106,7 @@ test('Reduced motion, клавиатура, ссылка на PDF и поиск'
   await expect(page.locator('.explanation h2')).toHaveText('Остаток относительно шага');
   await page.getByLabel('Поиск билета', { exact: true }).fill('1.2.23');
   await page.locator('.lesson-link').click();
-  await expect(page.locator('h1')).toHaveText('Излому — свой промежуток наклонов');
+  await expect(page.locator('h1')).toHaveText('Излом превращается в скачок');
   const href = await page.locator('.ticket-links a').first().getAttribute('href');
   expect(href).toMatch(/notes\.pdf#page=\d+/);
   const response = await page.request.get('./notes.pdf');
@@ -124,6 +124,9 @@ for (const width of [375, 768, 1440])
       'diameter-area',
       'substitution',
       'jensen',
+      'one-sided-slopes',
+      'jumps',
+      'tangent-support',
       'quadrature',
       'gamma',
       'brouwer',

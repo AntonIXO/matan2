@@ -1,4 +1,4 @@
-import type { Lesson, Params, Parameter } from './types';
+import type { Lesson, Params, Parameter, Motion, Step } from './types';
 import { clamp } from './math';
 export type SceneState = { id: string; step: number; progress: number; params: Params };
 export function effectiveParameter(l: Lesson, key: string, step = 0): Parameter | undefined {
@@ -19,27 +19,34 @@ export const defaults = (l: Lesson): Params =>
 export function interpolate(from: number, to: number, t: number, log = false) {
   return log && from > 0 && to > 0 ? from * (to / from) ** t : from + (to - from) * t;
 }
+export function stepMotions(step: Step): Motion[] {
+  return step.motion ? (Array.isArray(step.motion) ? step.motion : [step.motion]) : [];
+}
+export function motionProgress(m: Motion, value: number) {
+  if (m.from === m.to) return 0;
+  const v = clamp(value, Math.min(m.from, m.to), Math.max(m.from, m.to));
+  return clamp(
+    m.log && m.from > 0 && m.to > 0 && v > 0
+      ? Math.log(v / m.from) / Math.log(m.to / m.from)
+      : (v - m.from) / (m.to - m.from),
+    0,
+    1,
+  );
+}
 export function atStep(l: Lesson, index = 0, base?: Params, progress?: number): SceneState {
   const step = clamp(Math.round(index), 0, l.steps.length - 1),
     st = l.steps[step],
     params = { ...defaults(l), ...base, ...st.pose };
   for (const p of l.parameters) params[p.key] = parameterValue(l, p.key, params[p.key], step);
   let position = progress ?? 0;
-  if (st.motion) {
-    const m = st.motion;
+  for (const [index, m] of stepMotions(st).entries()) {
     if (progress !== undefined)
       params[m.key] = parameterValue(l, m.key, interpolate(m.from, m.to, progress, m.log), step);
     else if (m.from === m.to) params[m.key] = parameterValue(l, m.key, m.from, step);
     else {
       const value = clamp(params[m.key], Math.min(m.from, m.to), Math.max(m.from, m.to));
       params[m.key] = parameterValue(l, m.key, value, step);
-      position = clamp(
-        m.log
-          ? Math.log(value / m.from) / Math.log(m.to / m.from)
-          : (value - m.from) / (m.to - m.from),
-        0,
-        1,
-      );
+      if (index === 0) position = motionProgress(m, value);
     }
   }
   return { id: l.id, step, progress: position, params };
@@ -82,24 +89,17 @@ export function encodeState(s: SceneState) {
   return '#' + s.id + '?' + q;
 }
 export function seekState(s: SceneState, l: Lesson, progress: number): SceneState {
-  const m = l.steps[s.step].motion,
-    p = clamp(progress, 0, 1),
+  const p = clamp(progress, 0, 1),
     params = { ...s.params };
-  if (m) params[m.key] = parameterValue(l, m.key, interpolate(m.from, m.to, p, m.log), s.step);
+  for (const m of stepMotions(l.steps[s.step]))
+    params[m.key] = parameterValue(l, m.key, interpolate(m.from, m.to, p, m.log), s.step);
   return { ...s, progress: p, params };
 }
 export function changeParam(s: SceneState, l: Lesson, key: string, value: number): SceneState {
   if (l.steps[s.step].locked?.includes(key)) return s;
   const v = parameterValue(l, key, value, s.step),
-    m = l.steps[s.step].motion;
+    m = stepMotions(l.steps[s.step])[0];
   let progress = s.progress;
-  if (m?.key === key && m.to !== m.from)
-    progress = clamp(
-      m.log && v > 0
-        ? Math.log(v / m.from) / Math.log(m.to / m.from)
-        : (v - m.from) / (m.to - m.from),
-      0,
-      1,
-    );
+  if (m?.key === key && m.to !== m.from) progress = motionProgress(m, v);
   return { ...s, progress, params: { ...s.params, [key]: v } };
 }

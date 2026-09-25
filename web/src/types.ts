@@ -8,13 +8,14 @@ export type Parameter = {
   value: number;
   unit?: string;
 };
+export type Motion = { key: string; from: number; to: number; log?: boolean };
 export type Step = {
   title: string;
   text: string;
   formula: string;
   focus?: string;
   pose?: Params;
-  motion?: { key: string; from: number; to: number; log?: boolean };
+  motion?: Motion | Motion[];
   duration?: number;
   locked?: string[];
   limits?: Record<string, { min?: number; max?: number; step?: number }>;

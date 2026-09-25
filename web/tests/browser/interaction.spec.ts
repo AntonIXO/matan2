@@ -104,9 +104,11 @@ test('WebMCP: контракт действий через тестовый ре
     (window as any).__sceneTools.open_matan_scene.execute({ lessonId: 'polar-area', step: 2 }),
   );
   await expect(page.locator('h1')).toHaveText('Зажать сектор двумя круговыми');
+  await page.getByRole('button', { name: 'Воспроизвести шаг', exact: true }).click();
   await page.evaluate(() =>
     (window as any).__sceneTools.configure_matan_scene.execute({ params: { c: 0.2, delta: 0.5 } }),
   );
+  await expect(page.getByRole('button', { name: 'Воспроизвести шаг', exact: true })).toBeVisible();
   const state = await page.evaluate(() =>
     (window as any).__sceneTools.read_matan_scene.execute({}),
   );

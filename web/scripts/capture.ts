@@ -50,7 +50,7 @@ for (const lesson of lessons) {
     await page.locator('.steps button').nth(step).click();
     const timeline = page.getByRole('slider', { name: 'Ход текущего шага', exact: true });
     // Midpoint is informative for moving sections; retain exact locked poses.
-    if (lesson.steps[step].motion?.from !== lesson.steps[step].motion?.to)
+    if (await timeline.isEnabled())
       await timeline.evaluate((node) => {
         const input = node as HTMLInputElement;
         Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(

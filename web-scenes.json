@@ -148,9 +148,9 @@
     "op-b1-16": [
       {
         "title": "Хорда выше, опора ниже",
-        "url": "https://math.devpins.org/s2/#convexity?step=3",
+        "url": "https://math.devpins.org/s2/#convexity?step=2",
         "lesson": "convexity",
-        "step": 3
+        "step": 2
       },
       {
         "title": "Два луча и один диаметр",
@@ -443,21 +443,15 @@
     ],
     "th-b1-22": [
       {
-        "title": "Хорда выше, опора ниже",
-        "url": "https://math.devpins.org/s2/#convexity?step=2",
-        "lesson": "convexity",
-        "step": 2
-      },
-      {
-        "title": "Излому — свой промежуток наклонов",
-        "url": "https://math.devpins.org/s2/#jumps?step=0",
-        "lesson": "jumps",
+        "title": "Пять наклонов в одном порядке",
+        "url": "https://math.devpins.org/s2/#one-sided-slopes?step=0",
+        "lesson": "one-sided-slopes",
         "step": 0
       }
     ],
     "th-b1-23": [
       {
-        "title": "Излому — свой промежуток наклонов",
+        "title": "Излом превращается в скачок",
         "url": "https://math.devpins.org/s2/#jumps?step=0",
         "lesson": "jumps",
         "step": 0
@@ -465,18 +459,18 @@
     ],
     "th-b1-24": [
       {
-        "title": "Хорда выше, опора ниже",
-        "url": "https://math.devpins.org/s2/#convexity?step=3",
-        "lesson": "convexity",
-        "step": 3
+        "title": "График выше каждой касательной",
+        "url": "https://math.devpins.org/s2/#tangent-support?step=0",
+        "lesson": "tangent-support",
+        "step": 0
       }
     ],
     "th-b1-25": [
       {
         "title": "Хорда выше, опора ниже",
-        "url": "https://math.devpins.org/s2/#convexity?step=4",
+        "url": "https://math.devpins.org/s2/#convexity?step=3",
         "lesson": "convexity",
-        "step": 4
+        "step": 3
       }
     ],
     "th-b1-26": [
