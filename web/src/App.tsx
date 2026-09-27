@@ -247,6 +247,12 @@ export default function App() {
         return;
       }
       const target = e.target as HTMLElement;
+      if (e.key === 'Enter' && playing) {
+        if (target.closest('input,select,textarea,[contenteditable],.MafsView')) return;
+        e.preventDefault();
+        pause();
+        return;
+      }
       const nativeControl = target.closest(
         'input,select,textarea,[contenteditable],[role="slider"],.MafsView',
       );
