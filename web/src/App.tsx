@@ -40,6 +40,8 @@ export default function App() {
   const [reduced, setReduced] = useState(
     () => matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
+  const reducedRef = useRef(reduced);
+  reducedRef.current = reduced;
   const lesson = lessons.find((l) => l.id === state.id)!,
     step = lesson.steps[state.step];
   const hasMotion = stepMotions(step).some((m) => !!parameterMotion(lesson, state.step, m.key));
@@ -68,7 +70,9 @@ export default function App() {
       setHighlight('');
       setPinnedHighlight('');
       // A playback frame may replace location.hash before this event is delivered.
-      update(decodeState(new URL(event.newURL).hash, lessons));
+      const next = decodeState(new URL(event.newURL).hash, lessons);
+      update(next);
+      startStepPlayback(next);
     };
     window.addEventListener('hashchange', fn);
     return () => window.removeEventListener('hashchange', fn);
@@ -99,6 +103,13 @@ export default function App() {
       .filter((m) => parameterMotion(l, s.step, m.key))
       .map((m) => createTrack(m, s.params[m.key], forward ? s.progress : undefined));
   }
+  function startStepPlayback(s: typeof state) {
+    const tracks = reducedRef.current ? [] : defaultTracks(s);
+    pausedTracksRef.current.clear();
+    setAll(false);
+    setTracks(tracks);
+    setPlaying(tracks.length > 0);
+  }
   function navigate(l: Lesson) {
     setHighlight('');
     setPinnedHighlight('');
@@ -114,14 +125,17 @@ export default function App() {
     const next = atStep(l, matchedTicket ? (l.entrySteps?.[matchedTicket] ?? 0) : 0);
     if (l.id !== stateRef.current.id) history.pushState(null, '', encodeState(next));
     update(next);
+    startStepPlayback(next);
     setCamera((c) => c + 1);
     setMenu(false);
   }
-  function chooseStep(index: number) {
+  function chooseStep(index: number, autoplay = true) {
     setHighlight('');
     setPinnedHighlight('');
     pause(true);
-    update(atStep(lesson, index, stateRef.current.params));
+    const next = atStep(lesson, index, stateRef.current.params);
+    update(next);
+    if (autoplay) startStepPlayback(next);
   }
   function param(key: string, value: number) {
     pausedTracksRef.current.delete(key);
@@ -233,21 +247,22 @@ export default function App() {
         return;
       }
       const target = e.target as HTMLElement;
-      if (
-        target.closest('input,select,textarea,button,a,[contenteditable],[role="slider"],.MafsView')
-      )
-        return;
+      const nativeControl = target.closest(
+        'input,select,textarea,[contenteditable],[role="slider"],.MafsView',
+      );
       if (e.code === 'Space') {
+        if (target.closest('button,a,[contenteditable],input,select,textarea')) return;
         e.preventDefault();
         toggle();
       }
+      if (nativeControl) return;
       if (e.key === 'ArrowRight') {
         e.preventDefault();
-        chooseStep(state.step + 1);
+        if (state.step < lesson.steps.length - 1) chooseStep(state.step + 1);
       }
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        chooseStep(state.step - 1);
+        if (state.step > 0) chooseStep(state.step - 1);
       }
     };
     window.addEventListener('keydown', on);
