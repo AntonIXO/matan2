@@ -1,9 +1,10 @@
 import MovablePoint from '../AccessiblePoint';
+import Brouwer from './Brouwer';
 import { Circle } from 'mafs';
 import type { SceneProps } from '../types';
 import { Board, Curve, Dot, Seg, Fill, Label, Arrow, Metrics, sample, C } from './Plane';
 import { add, sub, mul, norm, dot, clamp, F, A, TAU, fmt, linspace, type V2 } from '../math';
-import { lp, unitP, fixedMap, hexBoard, hexPath, hexCenter, graphSample } from '../models';
+import { lp, unitP, graphSample } from '../models';
 const m = (label: string, value: number | string, color?: string) => ({ label, value, color });
 function Topology({ params: p, step, onParam, cameraKey }: SceneProps) {
   const q: V2 = [p.x, p.y],
@@ -315,91 +316,6 @@ function Cantor({ params: p, cameraKey }: SceneProps) {
           m('ε', p.eps, C.gold),
         ]}
       />
-    </>
-  );
-}
-function Brouwer({ params: p, step, onParam, cameraKey }: SceneProps) {
-  if (step >= 2) {
-    const board = hexBoard(p.seed),
-      found = hexPath(board),
-      path = new Set(found.path);
-    return (
-      <>
-        <Board x={[-1.1, 10]} y={[-1, 6.5]} axes={false} reset={cameraKey}>
-          {board.map((color, i) => {
-            const q = hexCenter(i);
-            return (
-              <Fill
-                key={i}
-                points={linspace(0, TAU, 6)
-                  .slice(0, 6)
-                  .map((a) =>
-                    add(q, mul([Math.cos(a + Math.PI / 6), Math.sin(a + Math.PI / 6)], 0.55)),
-                  )}
-                color={color ? C.gold : C.cyan}
-                opacity={path.has(i) ? 0.75 : 0.2}
-              />
-            );
-          })}
-          <Curve points={found.path.map((i) => hexCenter(i))} color={C.white} width={4} />
-          <Dot p={hexCenter(found.path[0])} color={C.white} />
-          <Dot p={hexCenter(found.path[found.path.length - 1])} color={C.white} />
-          <Seg a={[-0.65, 0]} b={[2.35, 5.2]} color={C.cyan} />
-          <Seg a={[6.65, 0]} b={[9.65, 5.2]} color={C.cyan} />
-          <Seg a={[0, -0.65]} b={[6, -0.65]} color={C.gold} />
-          <Seg a={[3, 5.85]} b={[9, 5.85]} color={C.gold} />
-        </Board>
-        <Metrics
-          items={[
-            m('цвет пути', found.color ? 'золотой' : 'бирюзовый'),
-            m('узлов в пути', found.path.length),
-            m('соседство', '6 соседей'),
-          ]}
-        />
-      </>
-    );
-  }
-  const q: V2 = [p.x, p.y],
-    f = fixedMap(q);
-  return (
-    <>
-      <Board x={[-0.2, 1.2]} y={[-0.2, 1.2]} reset={cameraKey}>
-        <Fill
-          points={[
-            [0, 0],
-            [1, 0],
-            [1, 1],
-            [0, 1],
-          ]}
-          opacity={0.04}
-        />
-        {linspace(0.05, 0.95, 7).flatMap((x, i) =>
-          linspace(0.05, 0.95, 7).map((y, j) => (
-            <Arrow
-              key={i + '-' + j}
-              a={[x, y]}
-              b={add([x, y], mul(sub(fixedMap([x, y]), [x, y]), 0.2))}
-              color={C.muted}
-            />
-          )),
-        )}
-        <Arrow a={q} b={f} color={C.gold} />
-        <Dot p={f} label="F(x)" color={C.gold} />
-        <MovablePoint
-          label="Точка x"
-          point={q}
-          onMove={([x, y]) => {
-            onParam('x', clamp(x, 0, 1));
-            onParam('y', clamp(y, 0, 1));
-          }}
-          color={C.cyan}
-        />
-        {step >= 1 && <Dot p={[0.2, 0.6]} label="F(x*)=x*" color={C.purple} />}
-      </Board>
-      <Metrics
-        items={[m('‖F(x)−x‖', norm(sub(f, q)), C.gold), m('неподвижная точка', '(0,2; 0,6)')]}
-      />
-      <div className="board-hint">Серое поле: смещение ×0,2 · выбранная стрелка: ×1</div>
     </>
   );
 }

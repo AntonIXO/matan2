@@ -98,6 +98,92 @@ export const unitP = (angle: number, p: number): V2 => {
   return [q[0] / n, q[1] / n];
 };
 export const fixedMap = ([x, y]: V2): V2 => [(1 - y) / 2, (1 + x) / 2];
+// Numerical scale for the Brouwer illustrations, not a claimed positive
+// minimum of fixedMap: that map has the fixed point (0.2, 0.6).
+export const BROUWER_EPS = 0.1;
+export const BROUWER_DELTA = 0.1;
+export function brouwerGrid(n: number, delta = BROUWER_DELTA) {
+  const side = 1 / n;
+  const diagonal = Math.SQRT2 * side;
+  return { side, diagonal, fine: diagonal < delta, minimumN: Math.floor(Math.SQRT2 / delta) + 1 };
+}
+export function brouwerDisplacement(v: V2) {
+  const image = fixedMap(v);
+  const displacement: V2 = [image[0] - v[0], image[1] - v[1]];
+  return { image, displacement, g: Math.max(...displacement.map(Math.abs)) };
+}
+export function brouwerColor(v: V2, eps = BROUWER_EPS): 0 | 1 | 2 {
+  const { displacement } = brouwerDisplacement(v);
+  // 0 explicitly denotes an uncoloured node; the actual example cannot
+  // satisfy the hypothetical global lower bound used in the proof.
+  return displacementColor(displacement, eps);
+}
+export function brouwerPair(n: number, x = 0.2, y = 0.4) {
+  const v: V2 = [
+    Math.min(n - 1, Math.max(0, Math.round(x * n))) / n,
+    Math.min(n - 1, Math.max(0, Math.round(y * n))) / n,
+  ];
+  const next: V2 = [v[0] + 1 / n, v[1] + 1 / n];
+  const first = brouwerDisplacement(v),
+    second = brouwerDisplacement(next);
+  const inputChange = next[0] - v[0];
+  const imageChange = second.image[0] - first.image[0];
+  return {
+    v,
+    next,
+    first,
+    second,
+    inputChange,
+    imageChange,
+    change: Math.abs(second.displacement[0] - first.displacement[0]),
+    bound: Math.abs(inputChange) + Math.abs(imageChange),
+  };
+}
+// The same six neighbours in square coordinates and in a regular Hex board.
+export const HEX_STEPS: V2[] = [
+  [1, 0],
+  [-1, 0],
+  [0, 1],
+  [0, -1],
+  [1, 1],
+  [-1, -1],
+];
+export function brouwerHexPosition(cell: number, n: number, morph: number): V2 {
+  const c = cell % n,
+    r = n - 1 - Math.floor(cell / n);
+  const scale = 220 / (n - 1);
+  const hex: V2 = [
+    230 + scale * (c - r / 2 - (n - 1) / 4),
+    190 - ((scale * Math.sqrt(3)) / 2) * (r - (n - 1) / 2),
+  ];
+  const square: V2 = [80 + (300 * c) / (n - 1), 340 - (300 * r) / (n - 1)];
+  const t = Math.max(0, Math.min(1, morph));
+  return [hex[0] + t * (square[0] - hex[0]), hex[1] + t * (square[1] - hex[1])];
+}
+export const BROUWER_COLOR_EXAMPLES: V2[] = [
+  [0.14, 0.04],
+  [-0.16, 0.08],
+  [0.03, 0.18],
+  [0.02, -0.17],
+];
+export function displacementColor(displacement: V2, eps = BROUWER_EPS): 0 | 1 | 2 {
+  return Math.abs(displacement[0]) >= eps - 1e-12
+    ? 1
+    : Math.abs(displacement[1]) >= eps - 1e-12
+      ? 2
+      : 0;
+}
+export const BROUWER_SIGN_EXAMPLE = [0.24, 0.18, 0.1, -0.1, -0.18, -0.24];
+export function firstNegativePair(values: number[]) {
+  const index = values.findIndex((value) => value < 0);
+  if (index <= 0) throw new Error('A positive start and a later negative value are required');
+  return {
+    index,
+    before: values[index - 1],
+    after: values[index],
+    jump: values[index - 1] - values[index],
+  };
+}
 export function hexBoard(seed: number, n = 7) {
   let state = seed >>> 0;
   return Array.from({ length: n * n }, () => {

@@ -14,6 +14,12 @@ export function formulaRows(tex: string) {
     if (tex[i] === '{') depth++;
     if (tex[i] === '}') depth--;
     if (depth || env || left) continue;
+    if (tex.startsWith('\\\\', i)) {
+      result.push(tex.slice(start, i));
+      i++;
+      start = i + 1;
+      continue;
+    }
     const separator = tex.startsWith('\\qquad', i) || tex.startsWith(',\\quad', i);
     const relation =
       tex[i] === '=' ||

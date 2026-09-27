@@ -52,7 +52,9 @@ test('Крайние значения всех параметров и сохр�
     await page.goto('./#' + l.id);
     await ready(page);
     for (const p of l.parameters) {
-      const slider = page.getByRole('slider', { name: p.label, exact: true });
+      // A step may hide its locked controls. They remain in the DOM and must
+      // still be disabled; role lookup omits hidden elements and would wait forever.
+      const slider = page.locator(`#parameter-${p.key}`);
       if (await slider.isDisabled()) continue;
       await slider.press('Home');
       await valid(page);
@@ -155,7 +157,11 @@ test('Сенсорный ввод: каталог, шаг, перемещени�
   await page.getByLabel('Поиск билета', { exact: true }).fill('Смещение');
   await page.locator('.lesson-link').tap();
   await expect(page.locator('h1')).toHaveText('Смещение и одноцветная тропинка');
-  await page.locator('.steps button').nth(2).tap();
-  await expect(page.locator('.explanation h2')).toHaveText('Отдельная доска Гекса');
+  await page.locator('.steps button').nth(4).tap();
+  await expect(page.locator('.explanation h2')).toHaveText('Гекс и квадратная схема — одна доска');
+  await page.getByRole('button', { name: '3. Квадратная схема', exact: true }).tap();
+  await expect(page.getByTestId('hex-cells')).toHaveAttribute('opacity', '0');
+  await page.getByRole('button', { name: '1. Шестиугольники', exact: true }).tap();
+  await expect(page.getByTestId('hex-cells')).toHaveAttribute('opacity', '1');
   await context.close();
 });

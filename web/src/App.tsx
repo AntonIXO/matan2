@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import MathText from './MathText';
 import { lessons } from './lessons';
 import Formula from './Formula';
 import type { Params, Lesson } from './types';
@@ -379,7 +380,9 @@ export default function App() {
                   {lesson.group} <span>/</span> {mainTicket?.number}
                 </div>
                 <h1>{lesson.title}</h1>
-                <p>{lesson.subtitle}</p>
+                <p>
+                  <MathText>{lesson.subtitle}</MathText>
+                </p>
               </div>
               <button
                 className="quiet-button"
@@ -495,7 +498,9 @@ export default function App() {
                   МЕХАНИЗМ <span>{String(state.step + 1).padStart(2, '0')}</span>
                 </div>
                 <h2>{step.title}</h2>
-                <p className="step-text">{step.text}</p>
+                <p className="step-text">
+                  <MathText>{step.text}</MathText>
+                </p>
                 <div className="formula-card" tabIndex={0}>
                   <Formula tex={step.formula} />
                 </div>
@@ -555,7 +560,11 @@ export default function App() {
                   {lesson.parameters
                     .map((base) => effectiveParameter(lesson, base.key, state.step)!)
                     .map((p) => (
-                      <div className="parameter" key={p.key}>
+                      <div
+                        className="parameter"
+                        key={p.key}
+                        hidden={lesson.id === 'brouwer' && step.locked?.includes(p.key)}
+                      >
                         <label htmlFor={`parameter-${p.key}`}>
                           {p.label}
                           <output>
@@ -591,7 +600,9 @@ export default function App() {
                 </div>
                 <div className="insight">
                   <span>∴</span>
-                  <p>{lesson.insight}</p>
+                  <p>
+                    <MathText>{lesson.insight}</MathText>
+                  </p>
                 </div>
               </aside>
             </div>
@@ -611,8 +622,14 @@ export default function App() {
             <footer className="lesson-footer">
               <div>
                 <h3>Условия и источник</h3>
-                <p>{lesson.conditions}</p>
-                {lesson.note && <p className="source-note">{lesson.note}</p>}
+                <p>
+                  <MathText>{lesson.conditions}</MathText>
+                </p>
+                {lesson.note && (
+                  <p className="source-note">
+                    <MathText>{lesson.note}</MathText>
+                  </p>
+                )}
                 <div className="ticket-links">
                   {lesson.tickets.map((id) => {
                     const t = ticketMap[id];

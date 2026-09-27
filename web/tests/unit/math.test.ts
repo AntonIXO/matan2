@@ -280,7 +280,7 @@ describe('Квадратуры, специальные функции, топо�
   });
 });
 describe('Каталог, состояния и PDF', () => {
-  test('все сцены имеют 3–7 шагов, валидные ссылки и формулы', () => {
+  test('все сцены имеют 3–8 шагов, валидные ссылки и формулы', () => {
     expect(lessons.length).toBeGreaterThanOrEqual(34);
     expect(new Set(lessons.map((l) => l.id)).size).toBe(lessons.length);
     expect(new Set(lessons.flatMap((l) => l.tickets))).toEqual(
@@ -288,7 +288,7 @@ describe('Каталог, состояния и PDF', () => {
     );
     for (const l of lessons) {
       expect(l.steps.length).toBeGreaterThanOrEqual(3);
-      expect(l.steps.length).toBeLessThanOrEqual(7);
+      expect(l.steps.length).toBeLessThanOrEqual(8);
       for (const id of l.tickets) expect(id in metadata.tickets).toBe(true);
       l.steps.forEach((st, i) => {
         expect(() =>

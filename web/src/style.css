@@ -1155,3 +1155,140 @@ input[type='checkbox'] {
     margin-top: 12px;
   }
 }
+
+/* Proof diagrams have a readable ledger, so let their height follow the content. */
+.canvas-area.scene-brouwer {
+  height: auto !important;
+  min-height: 580px;
+}
+.brouwer-content {
+  padding: 18px 20px 20px;
+  width: 100%;
+}
+.brouwer-caption {
+  color: #a5bac8;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+.brouwer-diagram {
+  display: block;
+  width: 100%;
+  max-width: 510px;
+  height: auto;
+  margin: 10px auto;
+  overflow: visible;
+}
+.brouwer-diagram text {
+  font-family: inherit;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.brouwer-ledger {
+  display: grid;
+  gap: 10px;
+}
+.brouwer-card {
+  border-left: 2px solid;
+  background: #152330;
+  padding: 10px 12px;
+  line-height: 1.65;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.brouwer-card > strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.brouwer-conclusion {
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 0;
+  padding: 6px 0;
+}
+.scene-brouwer .scene-metrics {
+  position: static;
+  margin-top: 14px;
+}
+@media (max-width: 760px) {
+  .brouwer-content {
+    padding: 14px 10px;
+  }
+}
+.brouwer-lengths {
+  display: block;
+  width: 100%;
+  max-width: 510px;
+  margin: auto;
+  font-family: inherit;
+  font-size: 15px;
+}
+.parameter[hidden] {
+  display: none;
+}
+
+.brouwer-svg-math {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.brouwer-svg-math .katex {
+  font-size: 1.1em;
+  text-shadow: 0 1px 3px #101923;
+}
+.brouwer-neighbours {
+  display: block;
+  width: 100%;
+  max-width: 510px;
+  margin: 14px auto 0;
+}
+.brouwer-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0 6px;
+}
+.brouwer-choices button {
+  flex: 1 1 110px;
+  border: 1px solid #385264;
+  border-radius: 5px;
+  padding: 9px 8px;
+  font: inherit;
+  font-size: 12px;
+  background: #152330;
+  color: #b7cbd8;
+  cursor: pointer;
+}
+.brouwer-choices button[aria-pressed='true'] {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: #17343d;
+}
+.brouwer-card .formula-lines {
+  display: block;
+  overflow-x: auto;
+  padding: 2px 0;
+}
+.brouwer-card .katex-display,
+.brouwer-conclusion .katex-display {
+  text-align: left;
+  margin: 0.35em 0;
+}
+.brouwer-conclusion .formula-lines {
+  display: block;
+  overflow-x: auto;
+}
+.brouwer-caption .formula.inline,
+.step-text .formula.inline {
+  font-size: 0.95em;
+}
+.brouwer-conclusion {
+  border: 1px solid #7c414d;
+  border-radius: 6px;
+  padding: 12px;
+  background: #301e2a;
+}
